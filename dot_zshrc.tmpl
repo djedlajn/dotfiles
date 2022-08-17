@@ -1,0 +1,198 @@
+(( ${+commands[direnv]} )) && emulate zsh -c "$(direnv export zsh)"
+
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+(( ${+commands[direnv]} )) && emulate zsh -c "$(direnv hook zsh)"
+
+
+# ┌───────────────────────────────────┐
+# │   Setup                           │
+# │                                   │
+# └───────────────────────────────────┘
+
+setopt promptsubst
+
+export ARCH=$(uname -m)
+export CPU_BRAND=$(sysctl -n machdep.cpu.brand_string)
+export EDITOR='nvim'
+
+export ASDF_DIR=${HOME}/.asdf
+export DIRENV_LOG_FORMAT=
+
+# FZF
+export FZF_DEFAULT_COMMAND="fd . ${HOME}"
+export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+export FZF_ALT_C_COMMAND="fd -t d . ${HOME}"
+
+ZI_REPO='zdharma-continuum'; GH_RAW_URL='https://raw.githubusercontent.com'
+
+alias vi="nvim"
+alias vim="nvim"
+alias cat="bat"
+
+# ┌───────────────────────────────────┐
+# │   History config                  │
+# │                                   │
+# └───────────────────────────────────┘
+
+export HISTFILE="${HOME}/.zsh_history"
+export HISTSIZE=10000000
+export SAVEHIST=${HISTSIZE}
+setopt BANG_HIST                 # Treat the '!' character specially during expansion.
+setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
+setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY             # Share history between all sessions.
+setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicate entries first when trimming history.
+setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
+setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
+setopt HIST_IGNORE_SPACE         # Don't record an entry starting with a space.
+setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
+setopt HIST_VERIFY               # Don't execute immediately upon history expansion.
+
+# ┌───────────────────────────────────┐
+# │   ZI INIT CONFIG                  │
+# │                                   │
+# └───────────────────────────────────┘
+
+if [[ ! -f $HOME/.zi/bin/zi.zsh ]]; then
+  print -P "%F{33}▓▒░ %F{160}Installing (%F{33}z-shell/zi%F{160})…%f"
+  command mkdir -p "$HOME/.zi" && command chmod g-rwX "$HOME/.zi"
+  command git clone -q --depth=1 --branch "main" https://github.com/z-shell/zi "$HOME/.zi/bin" && \
+    print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+    print -P "%F{160}▓▒░ The clone has failed.%f%b"
+fi
+source "$HOME/.zi/bin/zi.zsh"
+autoload -Uz _zi
+(( ${+_comps} )) && _comps[zi]=_zi
+# examples here -> https://z-shell.pages.dev/docs/gallery/collection
+zicompinit # <- https://z-shell.pages.dev/docs/gallery/collection#minimal
+zi light-mode for \
+  z-shell/z-a-meta-plugins \
+  @annexes # <- https://z-shell.pages.dev/docs/ecosystem/annexes
+# examples here -> https://z-shell.pages.dev/docs/gallery/collection
+zicompinit # <- https://z-shell.pages.dev/docs/gallery/collection#minimal
+
+# ┌───────────────────────────────────┐
+# │   ASDF                            │
+# │                                   │
+# └───────────────────────────────────┘
+
+
+if [[ ! -d "/${HOME}/.asdf" ]]; then
+	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
+    autoload -Uz compinit && compinit
+    . ${HOME}/.asdf/asdf.sh
+    cp -vf ${ASDF_DIR}/completions/_asdf ${HOME}/.zi/completions
+    asdf update
+    asdf plugin add direnv
+    asdf plugin add nodejs
+    asdf install direnv latest
+
+    mkdir -p ~/.config/direnv/
+    cat <<EOF >> ~/.config/direnv/direnvrc
+source "\$(asdf direnv hook asdf)"
+EOF
+    echo "use asdf" > ~/.envrc
+    asdf install
+    asdf exec direnv allow
+fi
+
+# ┌───────────────────────────────────┐
+# │   FZF                             │
+# │                                   │
+# └───────────────────────────────────┘
+
+zi for \
+  from'gh-r' nocompile junegunn/fzf \
+  https://github.com/junegunn/fzf/raw/master/shell/{'completion','key-bindings'}.zsh
+
+# ┌───────────────────────────────────┐
+# │   OH-MY-ZSH & PRETZO PLUGINS      │
+# │                                   │
+# └───────────────────────────────────┘
+
+zinit for \
+    OMZL::{'clipboard','compfix','completion','git','grep','key-bindings','termsupport'}.zsh \
+    PZT::modules/{'history','rsync'}
+
+# Load prompt if terminal has least 256 colors.
+if [ "${TERM##*-}" = '256color' ] || [ "${terminfo[colors]:?}" -gt 255 ]; then
+  zi ice depth=1; zi light romkatv/powerlevel10k
+fi
+
+# ┌───────────────────────────────────┐
+# │   GITHUB BINARIES                 │
+# │                                   │
+# └───────────────────────────────────┘
+
+is_apple_m1 () {
+  if [[ "$ARCH" == *"arm64"* ]] && [[ "$CPU" == "Apple M1" ]]; then
+    true
+  else
+    false
+  fi
+}
+
+zi from'gh-r' nocompile for \
+    sbin"**/fd"                                                               @sharkdp/fd \
+    sbin"**/bat"                                                              @sharkdp/bat \
+    sbin'**/d*a'                                                              dandavison/delta \
+    sbin'sty**'                                                               JohnnyMorganz/StyLua\
+    sbin'k3**             -> k3sup' bpick"**darwin**"                         alexellis/k3sup \
+    sbin'ch*              -> chezmoi' bpick"**darwin**"                       twpayne/chezmoi \
+    sbin'rus**            -> rustywind' bpick"**darwin**"                     avencera/rustywind \
+    sbin'tokei*'                                                              XAMPPRocky/tokei \
+    sbin'**/sh*           -> shfmt'                                           @mvdan/sh  \
+    sbin'd*y*             -> dry'                                             moncho/dry \
+    sbin'btm*             -> btm'                                             ClementTsang/bottom \
+    sbin'bazel*           -> bazelisk'                                        bazelbuild/bazelisk \
+    sbin'sops*            -> sops'                                            mozilla/sops \
+    sbin'rust-*           -> rust-analyzer'                                   rust-lang/rust-analyzer \
+    sbin"gh**/bin/gh" atinit"gh completion -s zsh > $ZI[COMPLETIONS_DIR]/_gh" cli/cli \
+    sbin'**/bin/dog*      -> dog'  atclone"cp -vf completions/dog.zsh _dog"   ogham/dog \
+    sbin"**/rg*           -> rg"   mv"rg/rg"                                  BurntSushi/ripgrep \
+    sbin"**/vivid**/vivid -> vivid"  mv"vivid-* -> vivid"                     @sharkdp/vivid \
+    sbin'**/bin/nvim      -> nvim' bpick'**macos**' ver'nightly'              neovim/neovim \
+    sbin'teal*            -> tldr' mv"tldr* -> tldr"                          dbrgn/tealdeer \
+    sbin'tree*            -> tree-sitter' mv"tree* -> tree-sitter"            tree-sitter/tree-sitter\
+    sbin'**/exa'  atclone'cp -vf completions/exa.zsh _exa' atinit"
+        alias l='exa -blF'; alias la='exa -abghilmu'
+        alias ll='exa -al'; alias tree='exa --tree'
+        alias ls='exa --git --group-directories-first'" \
+    ogham/exa \
+
+# ┌───────────────────────────────────┐
+# │   CUSTOM COMPLETIONS              │
+# │                                   │
+# └───────────────────────────────────┘
+
+zi ice lucid wait as'completion' blockf has'fd'
+zi snippet https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/fd/_fd
+zi ice lucid wait as'completion' blockf has'tldr' mv'zsh_tealdeer -> _tldr'
+zi snippet https://github.com/dbrgn/tealdeer/blob/main/completion/zsh_tealdeer
+
+
+# ┌───────────────────────────────────┐
+# │   MISC                            │
+# │                                   │
+# └───────────────────────────────────┘
+
+zinit wait lucid for \
+ atinit"zpcompinit; zpcdreplay" \
+    zdharma/fast-syntax-highlighting \
+ atload"!_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions \
+ blockf \
+    zsh-users/zsh-completions \
+    zdharma-continuum/history-search-multi-word \
+
+export LS_COLORS="$(vivid generate snazzy)"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+. ${HOME}/.asdf/asdf.sh
+
+{{/* vim: set filetype=zsh: */}}
