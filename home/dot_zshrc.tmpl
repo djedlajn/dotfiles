@@ -141,9 +141,8 @@ zi from'gh-r' nocompile for \
     sbin"**/bat"                                                              @sharkdp/bat \
     sbin'**/d*a'                                                              dandavison/delta \
     sbin'sty**'                                                               JohnnyMorganz/StyLua\
-    sbin'k3**             -> k3sup' bpick"**darwin**"                         alexellis/k3sup \
-    sbin'ch*              -> chezmoi' bpick"**darwin**"                       twpayne/chezmoi \
-    sbin'rus**            -> rustywind' bpick"**darwin**"                     avencera/rustywind \
+    sbin'k3**             -> k3sup'                          		      alexellis/k3sup \
+    sbin'rus**            -> rustywind'                                       avencera/rustywind \
     sbin'tokei*'                                                              XAMPPRocky/tokei \
     sbin'**/sh*           -> shfmt'                                           @mvdan/sh  \
     sbin'd*y*             -> dry'                                             moncho/dry \
@@ -152,11 +151,11 @@ zi from'gh-r' nocompile for \
     sbin'sops*            -> sops'                                            mozilla/sops \
     sbin'rust-*           -> rust-analyzer'                                   rust-lang/rust-analyzer \
     sbin"gh**/bin/gh" atinit"gh completion -s zsh > $ZI[COMPLETIONS_DIR]/_gh" cli/cli \
-    sbin'**/bin/dog*      -> dog'  atclone"cp -vf completions/dog.zsh _dog"   ogham/dog \
-    sbin"**/rg*           -> rg"   mv"rg/rg"                                  BurntSushi/ripgrep \
+    sbin'**/bin/dog*      -> dog'    atclone"cp -vf completions/dog.zsh _dog" ogham/dog \
+    sbin"**/rg*           -> rg"     mv"rg/rg"                                BurntSushi/ripgrep \
     sbin"**/vivid**/vivid -> vivid"  mv"vivid-* -> vivid"                     @sharkdp/vivid \
-    sbin'**/bin/nvim      -> nvim' bpick'**macos**' ver'nightly'              neovim/neovim \
-    sbin'teal*            -> tldr' mv"tldr* -> tldr"                          dbrgn/tealdeer \
+    sbin'**/bin/nvim      -> nvim'   ver'nightly'                             neovim/neovim \
+    sbin'teal*            -> tldr'   mv"tldr* -> tldr"                        dbrgn/tealdeer \
     sbin'tree*            -> tree-sitter' mv"tree* -> tree-sitter"            tree-sitter/tree-sitter\
     sbin'**/exa'  atclone'cp -vf completions/exa.zsh _exa' atinit"
         alias l='exa -blF'; alias la='exa -abghilmu'
