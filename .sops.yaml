@@ -1,0 +1,8 @@
+keys:
+  - &kadza age18smxw8ml839ln20p6h2h6l5p3cr4sc5x6f23f9sk54umgu7vkszql2tarr
+
+creation_rules:
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *kadza

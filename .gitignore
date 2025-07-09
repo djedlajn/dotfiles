@@ -1,0 +1,5 @@
+result
+.idea/
+.claude/settings.local.json
+.direnv/
+.pre-commit-config.yaml
