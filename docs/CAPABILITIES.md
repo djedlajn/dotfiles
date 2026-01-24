@@ -1,6 +1,8 @@
 # Capabilities Guide
 
-This document provides a detailed walkthrough of the tools, workflows, and features available in this nix-darwin configuration.
+Detailed walkthrough of tools, workflows, and features in this configuration.
+
+---
 
 ## Table of Contents
 
@@ -13,43 +15,50 @@ This document provides a detailed walkthrough of the tools, workflows, and featu
 - [Cloud & Kubernetes](#cloud--kubernetes)
 - [Secrets Management](#secrets-management)
 - [macOS Integration](#macos-integration)
+- [Aliases Reference](#aliases-reference)
 
 ---
 
 ## Shell Environment
 
-### Zsh with Modern Defaults
+### Zsh
 
-The shell is configured with oh-my-zsh and includes:
+Configured with oh-my-zsh and modern plugins:
 
-- **Auto-suggestions** — Type and see suggestions from history
-- **Syntax highlighting** — Commands are colored as you type
-- **Smart history** — Deduplicated, shared across sessions
+| Feature | Description |
+|---------|-------------|
+| Auto-suggestions | Type and see suggestions from history |
+| Syntax highlighting | Commands colored as you type |
+| Smart history | Deduplicated, shared across sessions |
 
 ### Starship Prompt
 
-Minimal two-line prompt showing:
+Minimal left prompt with language versions on the right:
+
 ```
-~/.config/nix main !+                              2s
-λ
+󱍢  ~/.config/nix  main !+                          22
 ```
 
-- Directory path (blue)
-- Git branch (purple)
-- Git status (yellow): `!` modified, `+` staged, `↑↓` ahead/behind
-- Command duration (if > 2s)
-- Lambda prompt (green = success, red = error)
+| Element | Meaning |
+|---------|---------|
+| `󱍢` | Prompt (green = success, red = error) |
+| `~/.config/nix` | Current directory |
+| `main` | Git branch |
+| `!` | Modified files |
+| `+` | Staged files |
+| ` 22` | Node.js version (right side) |
 
-### Atuin (Shell History)
+Theme: **Catppuccin Mocha**
 
-Replacement for standard shell history with fuzzy search:
+### Atuin
 
-```bash
-# Search history
-Ctrl+R          # Open atuin search
-↑/↓             # Navigate results
-Enter           # Execute selected command
-```
+Shell history replacement with fuzzy search:
+
+| Binding | Action |
+|---------|--------|
+| `Ctrl+R` | Open atuin search |
+| `↑/↓` | Navigate results |
+| `Enter` | Execute command |
 
 ### Key Bindings
 
@@ -59,7 +68,7 @@ Enter           # Execute selected command
 | `Ctrl+E` | End of line |
 | `Ctrl+W` | Delete word backward |
 | `Ctrl+R` | Search history (atuin) |
-| `Ctrl+X Ctrl+E` | Edit command in $EDITOR |
+| `Ctrl+X Ctrl+E` | Edit command in `$EDITOR` |
 | `Ctrl+Right` | Forward word |
 | `Ctrl+Left` | Backward word |
 
@@ -67,17 +76,17 @@ Enter           # Execute selected command
 
 ## File Navigation
 
-### Zoxide (Smart cd)
+### Zoxide
 
-Learns your habits and jumps to directories:
+Smart `cd` that learns your habits:
 
 ```bash
-z projects      # Jump to most frecent match for "projects"
-z nix           # Jump to ~/.config/nix (if frequently used)
+z projects      # Jump to most frecent match
+z nix           # Jump to ~/.config/nix
 zi              # Interactive selection with fzf
 ```
 
-### Yazi (File Manager)
+### Yazi
 
 Terminal file manager with vim bindings:
 
@@ -97,22 +106,22 @@ y               # Open yazi (alias)
 | `p` | Paste |
 | `/` | Search |
 
-### Eza (Modern ls)
+### Eza
 
-Replaces `ls` with icons and git integration:
+Modern `ls` with icons and git integration:
 
 ```bash
 ls              # eza (alias)
-ll              # Long format with details
-la              # Include hidden files
-tree            # Tree view with icons
+ll              # Long format
+la              # Include hidden
+tree            # Tree view
 ```
 
 ---
 
 ## Search & Find
 
-### Ripgrep (rg)
+### Ripgrep
 
 Fast content search:
 
@@ -124,7 +133,7 @@ rg "TODO" --hidden        # Include hidden files
 rg -i "error"             # Case insensitive
 ```
 
-### fd (Modern find)
+### fd
 
 Fast file finding:
 
@@ -133,42 +142,38 @@ fd "query"                # Find files matching "query"
 fd -e rs                  # Find all .rs files
 fd -H                     # Include hidden files
 fd -t d                   # Only directories
-fd "test" -x rm           # Find and delete (careful!)
+fd "test" -x rm           # Find and delete
 ```
 
-### fzf (Fuzzy Finder)
+### fzf
 
-Interactive filtering for any list:
+Interactive filtering:
 
-```bash
-Ctrl+T          # Fuzzy find files
-Ctrl+R          # Search history
-Alt+C           # cd into directory
-**<Tab>         # Trigger completion (e.g., vim **<Tab>)
-```
+| Binding | Action |
+|---------|--------|
+| `Ctrl+T` | Fuzzy find files |
+| `Ctrl+R` | Search history |
+| `Alt+C` | cd into directory |
+| `**<Tab>` | Trigger completion |
 
 Example workflows:
+
 ```bash
-# Open file in vim
-vim $(fd -t f | fzf)
-
-# Kill process interactively
-kill -9 $(ps aux | fzf | awk '{print $2}')
-
-# Checkout git branch
-git checkout $(git branch | fzf)
+vim $(fd -t f | fzf)                    # Open file in vim
+kill -9 $(ps aux | fzf | awk '{print $2}')  # Kill process
+git checkout $(git branch | fzf)        # Checkout branch
 ```
 
 ---
 
 ## Git Workflow
 
-### Lazygit (Git TUI)
+### Lazygit
 
-Full-featured git interface:
+Git TUI:
 
 ```bash
-lg              # Open lazygit (with directory change on exit)
+lg              # Open lazygit
 ```
 
 | Key | Action |
@@ -182,14 +187,14 @@ lg              # Open lazygit (with directory change on exit)
 | `?` | Help |
 | `Ctrl+O` | Open in browser |
 
-### Delta (Diff Viewer)
+### Delta
 
-Beautiful diffs with syntax highlighting:
+Syntax-highlighted diffs (automatic):
 
 ```bash
-git diff        # Uses delta automatically
-git show        # Uses delta automatically
-git log -p      # Uses delta automatically
+git diff        # Uses delta
+git show        # Uses delta
+git log -p      # Uses delta
 ```
 
 ### Git Aliases
@@ -211,14 +216,14 @@ gcb name        # git checkout -b name
 glog            # git log --oneline --graph
 ```
 
-### GitHub CLI (gh)
+### GitHub CLI
 
 ```bash
 gh pr create    # Create pull request
 gh pr view      # View current PR
 gh pr checkout  # Checkout PR locally
 gh issue list   # List issues
-gh repo view -w # Open repo in browser
+gh repo view -w # Open in browser
 ```
 
 ---
@@ -229,14 +234,14 @@ gh repo view -w # Open repo in browser
 
 Automatic per-project environments:
 
-**Setup:**
 ```bash
 cd ~/projects/my-app
 echo "use flake" > .envrc
 direnv allow
 ```
 
-**Example flake.nix:**
+Example `flake.nix`:
+
 ```nix
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -245,62 +250,43 @@ direnv allow
     pkgs = nixpkgs.legacyPackages.aarch64-darwin;
   in {
     devShells.aarch64-darwin.default = pkgs.mkShell {
-      packages = with pkgs; [
-        nodejs_22
-        postgresql_16
-      ];
-
-      shellHook = ''
-        echo "Dev environment loaded"
-      '';
+      packages = with pkgs; [ nodejs_22 postgresql_16 ];
+      shellHook = ''echo "Dev environment loaded"'';
     };
   };
 }
 ```
 
-Now `cd ~/projects/my-app` automatically loads Node.js and PostgreSQL.
+### Mise
 
-### Mise (Version Manager)
-
-Polyglot version management:
+Polyglot version manager:
 
 ```bash
-# Install versions
-mise install node@20
-mise install java@11
-mise install python@3.12
-
-# Use globally
-mise use -g node@22
-
-# Use in project (creates .mise.toml)
-mise use node@20
-
-# List installed
-mise ls
-
-# Show current
-mise current
+mise install node@20      # Install
+mise use -g node@22       # Set global default
+mise use node@20          # Set for project (.mise.toml)
+mise ls                   # List installed
+mise current              # Show current versions
 ```
 
-### Available Runtimes
+### Runtimes
 
-| Language | Default | Switch with mise |
-|----------|---------|------------------|
+| Language | Default | Switch |
+|----------|---------|--------|
 | Node.js | 22 LTS | `mise use node@20` |
 | Java | Zulu 17 | `mise use java@11` |
 | Python | 3.x | `mise use python@3.12` |
 | Elixir | 1.18 | via nix |
-| Rust | stable | via nix (rust-overlay) |
+| Rust | stable | via rust-overlay |
 | Go | latest | via nix |
 
 ---
 
 ## System Monitoring
 
-### Bottom (btm)
+### Bottom
 
-System monitor replacing top/htop:
+System monitor (`top` replacement):
 
 ```bash
 top             # Opens bottom (alias)
@@ -311,17 +297,17 @@ btm             # Direct command
 |-----|--------|
 | `q` | Quit |
 | `?` | Help |
-| `e` | Expand selected widget |
+| `e` | Expand widget |
 | `/` | Search processes |
 | `dd` | Kill process |
 | `Tab` | Cycle widgets |
 
-### Other Monitoring Tools
+### Other Tools
 
 ```bash
-procs           # Modern ps - process viewer
-dust            # Modern du - disk usage by directory
-duf             # Modern df - disk free space
+procs           # Process viewer (ps replacement)
+dust            # Disk usage by directory (du replacement)
+duf             # Disk free space (df replacement)
 bandwhich       # Network usage by process
 ```
 
@@ -332,17 +318,17 @@ bandwhich       # Network usage by process
 ### AWS CLI
 
 ```bash
-aws configure               # Setup credentials
-aws s3 ls                   # List S3 buckets
-aws ec2 describe-instances  # List EC2 instances
+aws configure
+aws s3 ls
+aws ec2 describe-instances
 ```
 
-### Kubernetes (kubectl + k9s)
+### Kubernetes
 
 ```bash
-kubectl get pods            # List pods
-kubectl logs -f <pod>       # Stream logs
-k9s                         # Open K8s TUI
+kubectl get pods
+kubectl logs -f <pod>
+k9s                         # K8s TUI
 ```
 
 **K9s shortcuts:**
@@ -377,45 +363,40 @@ kubens          # Switch namespaces
 
 ## Secrets Management
 
-### SOPS with Age Encryption
+### SOPS with Age
 
-Secrets are encrypted and safe to commit to git.
+Secrets encrypted and safe to commit:
 
-**Edit secrets:**
 ```bash
-sops secrets/secrets.yaml
+sops secrets/secrets.yaml   # Edit secrets
 ```
 
-**Format:**
+File format (decrypted view):
+
 ```yaml
-# Decrypted view
 api_key: my-secret-value
 database:
   password: db-secret
-  host: localhost
 ```
 
-**Use in Nix:**
+Use in Nix:
+
 ```nix
 sops.secrets.api_key = {};
 # Access at: config.sops.secrets.api_key.path
 ```
 
-### Age Key Location
-
-```
-~/.config/sops/age/keys.txt
-```
+Age key location: `~/.config/sops/age/keys.txt`
 
 ---
 
 ## macOS Integration
 
-### Keyboard Settings
+### Keyboard
 
-- **Fast key repeat** — KeyRepeat: 2, InitialKeyRepeat: 15
-- **Disabled auto-correct** — No automatic capitalization, spelling, etc.
-- **Full keyboard access** — Tab through all UI controls
+- Fast key repeat (KeyRepeat: 2, InitialKeyRepeat: 15)
+- No auto-correct, auto-capitalization, or smart quotes
+- Full keyboard access (Tab through all controls)
 
 ### Dock
 
@@ -426,7 +407,7 @@ sops.secrets.api_key = {};
 ### Finder
 
 - Show hidden files
-- Show file extensions
+- Show all file extensions
 - Column view by default
 - Full path in title bar
 
@@ -438,16 +419,18 @@ sops.secrets.api_key = {};
 
 ### Screenshots
 
-Saved to `~/Pictures/Screenshots` as PNG without shadows.
+- Location: `~/Pictures/Screenshots`
+- Format: PNG
+- No shadows
 
 ---
 
-## Useful Aliases
+## Aliases Reference
 
 ### Modern Replacements
 
-| Alias | Replacement | Description |
-|-------|-------------|-------------|
+| Alias | Tool | Description |
+|-------|------|-------------|
 | `cat` | bat | Syntax highlighting |
 | `grep` | ripgrep | Fast search |
 | `find` | fd | Fast find |
@@ -458,24 +441,24 @@ Saved to `~/Pictures/Screenshots` as PNG without shadows.
 
 ### Navigation
 
-| Alias | Description |
-|-------|-------------|
-| `..` | cd .. |
-| `...` | cd ../.. |
-| `....` | cd ../../.. |
+| Alias | Action |
+|-------|--------|
+| `..` | `cd ..` |
+| `...` | `cd ../..` |
+| `....` | `cd ../../..` |
 | `y` | yazi file manager |
 
 ### Nix
 
 | Alias | Command |
 |-------|---------|
-| `nrs` | darwin-rebuild switch --flake ~/.config/nix |
-| `nrb` | darwin-rebuild build --flake ~/.config/nix |
-| `nfu` | nix flake update |
-| `nsh` | nix-shell |
-| `nsp` | nix search nixpkgs |
+| `nrs` | `darwin-rebuild switch --flake ~/.config/nix` |
+| `nrb` | `darwin-rebuild build --flake ~/.config/nix` |
+| `nfu` | `nix flake update` |
+| `nsh` | `nix-shell` |
+| `nsp` | `nix search nixpkgs` |
 
-### Misc
+### Utilities
 
 | Alias | Description |
 |-------|-------------|
@@ -487,9 +470,9 @@ Saved to `~/Pictures/Screenshots` as PNG without shadows.
 
 ---
 
-## Tips & Tricks
+## Quick Tips
 
-### Quick File Preview
+### File Preview
 
 ```bash
 bat file.rs              # Syntax highlighted
@@ -500,26 +483,16 @@ hexyl binary.bin         # Hex view
 ### Data Processing
 
 ```bash
-# JSON
-cat data.json | jq '.items[].name'
-
-# YAML
-yq '.services' docker-compose.yml
-
-# CSV
-mlr --csv filter '$age > 30' data.csv
+cat data.json | jq '.items[].name'   # JSON
+yq '.services' docker-compose.yml     # YAML
+mlr --csv filter '$age > 30' data.csv # CSV
 ```
 
-### Benchmarking
+### Performance
 
 ```bash
-hyperfine 'fd' 'find .'  # Compare command performance
-```
-
-### Code Stats
-
-```bash
-tokei                    # Lines of code by language
+hyperfine 'fd' 'find .'  # Benchmark commands
+tokei                    # Code statistics
 ```
 
 ### Terminal Recording
