@@ -27,9 +27,9 @@
 
     # Activation behavior
     onActivation = {
-      autoUpdate = false;      # Don't auto-update on rebuild
+      autoUpdate = true;       # Update brew index on rebuild
       cleanup = "zap";         # Remove unlisted packages & casks
-      upgrade = false;         # Don't upgrade on rebuild
+      upgrade = true;          # Upgrade packages on rebuild
     };
 
     # Custom taps
