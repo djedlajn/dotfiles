@@ -65,6 +65,7 @@
     # ─────────────────────────────────────────────────────────────
     # Development tools
     # ─────────────────────────────────────────────────────────────
+    opencode        # AI coding agent for terminal
     pre-commit      # Git hooks
     gh              # GitHub CLI
     difftastic      # Structural diff
