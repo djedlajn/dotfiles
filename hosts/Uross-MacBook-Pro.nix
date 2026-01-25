@@ -34,6 +34,7 @@
 
     # Custom taps
     taps = [
+      "anomalyco/tap"         # opencode
       "nikitabobko/tap"       # AeroSpace
     ];
 
@@ -56,7 +57,7 @@
 
     # CLI tools not in nixpkgs (if any)
     brews = [
-      # "some-brew-only-tool"
+      "anomalyco/tap/opencode"  # AI coding agent (nix pkg outdated)
     ];
 
     # Mac App Store apps (requires `mas` CLI)
