@@ -33,7 +33,16 @@
         ./hosts/Uross-MacBook-Pro.nix
         home-manager.darwinModules.home-manager
         {
-          nixpkgs.overlays = [ rust-overlay.overlays.default ];
+          nixpkgs.overlays = [
+            rust-overlay.overlays.default
+            (final: prev: {
+              direnv = prev.direnv.overrideAttrs (old: {
+                env = (old.env or { }) // {
+                  CGO_ENABLED = "1";
+                };
+              });
+            })
+          ];
           nixpkgs.config.allowUnfreePredicate = pkg:
             builtins.elem (nixpkgs.lib.getName pkg) [
               "packer"  # HashiCorp BSL license
