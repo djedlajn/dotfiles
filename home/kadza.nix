@@ -116,7 +116,7 @@
     maven           # Java build tool
 
     # JavaScript/Node
-    nodejs_22       # Node.js LTS (includes corepack)
+    nodejs_24       # Node.js (includes corepack)
     bun             # Fast JS runtime
 
     # Python
