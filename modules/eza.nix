@@ -7,6 +7,10 @@
     extraOptions = [
       "--group-directories-first"
       "--header"
+      "--hyperlink"
+      "--color-scale"
+      "--time-style=relative"
+      "--no-user"
     ];
   };
 }

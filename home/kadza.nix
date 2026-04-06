@@ -28,7 +28,7 @@
     ../modules/ssh.nix
 
     # macOS apps
-    ../modules/aerospace.nix
+    # ../modules/aerospace.nix  # Disabled - tiling WM
     ../modules/raycast.nix
   ];
 
@@ -67,6 +67,8 @@
     # ─────────────────────────────────────────────────────────────
     pre-commit      # Git hooks
     gh              # GitHub CLI
+    jujutsu         # Modern VCS (jj)
+    television      # Fuzzy finder TUI (tv)
     difftastic      # Structural diff
     tokei           # Code statistics
     hyperfine       # Benchmarking
@@ -79,6 +81,7 @@
     # ─────────────────────────────────────────────────────────────
     nvd             # Nix version diff
     nix-tree        # Visualize nix dependencies
+    nh              # Nix helper (pretty rebuilds with diffs)
 
     # ─────────────────────────────────────────────────────────────
     # Formatters & Linters
@@ -136,6 +139,7 @@
     xh              # Modern curl (httpie-like)
     doggo           # DNS client
     dnsmasq         # DNS/DHCP server
+    cloudflared     # Cloudflare Tunnel client
 
     # ─────────────────────────────────────────────────────────────
     # Text & Data processing
@@ -158,6 +162,8 @@
     # ─────────────────────────────────────────────────────────────
     # Misc utilities
     # ─────────────────────────────────────────────────────────────
+    ouch            # Universal compress/decompress
+    trippy          # Network diagnostics TUI
     vivid           # LS_COLORS generator
     silicon         # Code screenshots
     asciinema       # Terminal recording
@@ -169,5 +175,4 @@
   ];
 
   home.stateVersion = "25.05";
-  # Note: .gitconfig-greenlight is managed by sops.templates in modules/sops.nix
 }

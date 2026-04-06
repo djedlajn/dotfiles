@@ -91,10 +91,6 @@
     ];
 
     includes = [
-      {
-        condition = "gitdir/i:~/greenlight/";
-        path = "~/.gitconfig-greenlight";
-      }
     ];
   };
 

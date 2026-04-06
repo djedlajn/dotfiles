@@ -25,11 +25,6 @@
         identityFile = "~/.ssh/id_ed25519";
       };
 
-      # Greenlight (work)
-      "greenlight" = {
-        host = "*.greenlight.guru *.greenlight-local";
-        identityFile = "~/.ssh/green_ed25519";
-      };
     };
   };
 }

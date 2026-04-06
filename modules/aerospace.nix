@@ -14,10 +14,10 @@
     enable-normalization-flatten-containers = true
     enable-normalization-opposite-orientation-for-nested-containers = true
 
-    # Layout
-    default-root-container-layout = 'tiles'
+    # Layout (accordion = stacked fullscreen, toggle to tiles with alt+/)
+    default-root-container-layout = 'accordion'
     default-root-container-orientation = 'auto'
-    accordion-padding = 30
+    accordion-padding = 0
 
     # Gaps (inner = between windows, outer = screen edges)
     [gaps]

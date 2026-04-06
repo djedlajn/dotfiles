@@ -2,6 +2,7 @@
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;
+    shellWrapperName = "y";
 
     settings = {
       manager = {
@@ -98,8 +99,6 @@
         { on = [ "g" "h" ]; run = "cd ~"; desc = "Go home"; }
         { on = [ "g" "c" ]; run = "cd ~/.config"; desc = "Go config"; }
         { on = [ "g" "d" ]; run = "cd ~/Downloads"; desc = "Go downloads"; }
-        { on = [ "g" "g" "r" ]; run = "cd ~/greenlight/gg-repo-service"; desc = "Go gg-repo-service"; }
-
         # Shell
         { on = [ ":" ]; run = "shell --interactive"; desc = "Shell command"; }
         { on = [ ";" ]; run = "shell --block --interactive"; desc = "Shell command (block)"; }

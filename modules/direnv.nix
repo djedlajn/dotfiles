@@ -12,7 +12,6 @@
       };
       whitelist = {
         prefix = [
-          "~/greenlight"
           "~/projects"
           "~/code"
         ];

@@ -372,7 +372,7 @@ i3-like tiling window manager for macOS.
 
 Per-project environments with nix-direnv.
 
-**Whitelisted directories:** `~/greenlight`, `~/projects`, `~/code`
+**Whitelisted directories:** `~/projects`, `~/code`
 
 ### Custom Layouts
 
@@ -506,8 +506,6 @@ Encrypted secrets with age encryption.
 
 **Decrypted secrets:**
 - `~/.ssh/id_ed25519` (personal)
-- `~/.ssh/green_ed25519` (work)
-- `~/.gitconfig-greenlight` (work email)
 
 ### Usage
 
@@ -534,7 +532,6 @@ sops secrets/secrets.yaml   # Edit secrets
 ### Host-specific Keys
 
 - Default: `~/.ssh/id_ed25519`
-- `*.greenlight.guru`: `~/.ssh/green_ed25519`
 
 ### Commit Signing
 

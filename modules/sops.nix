@@ -17,19 +17,7 @@
         path = "${config.home.homeDirectory}/.ssh/id_ed25519";
         mode = "0600";
       };
-      ssh_green_ed25519 = {
-        path = "${config.home.homeDirectory}/.ssh/green_ed25519";
-        mode = "0600";
-      };
-      work_email = {};
     };
 
-    templates."gitconfig-greenlight" = {
-      content = ''
-        [user]
-            email = ${config.sops.placeholder.work_email}
-      '';
-      path = "${config.home.homeDirectory}/.gitconfig-greenlight";
-    };
   };
 }

@@ -4,10 +4,6 @@
   xdg.configFile."bottom/bottom.toml".text = ''
     # Catppuccin Mocha theme for bottom
 
-    [styles]
-    # Catppuccin Mocha colors
-    theme = "custom"
-
     [styles.cpu]
     all_entry_color = "#cba6f7"      # mauve
     avg_entry_color = "#f38ba8"      # red
