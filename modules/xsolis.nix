@@ -56,4 +56,32 @@
     region = us-east-1
     output = json
   '';
+
+  # ── direnv activation under ~/xsolis/ ──
+  # Loaded by direnv on `cd ~/xsolis/<anything>`. Sets AWS profile, region,
+  # and activates mise (which reads .mise.toml below for Node/dotnet versions).
+  home.file."xsolis/.envrc".text = ''
+    # shellcheck shell=bash
+    export AWS_PROFILE=xsolis-dev
+    export AWS_REGION=us-east-1
+    export AWS_DEFAULT_REGION=us-east-1
+
+    # Cheap local check — looks for a non-expired SSO token cache file.
+    # Avoids a network call to STS on every `cd`.
+    if ! find "$HOME/.aws/sso/cache" -name '*.json' -mmin -480 2>/dev/null | grep -q .; then
+      echo "→ AWS SSO session likely expired — run: xsl-login"
+    fi
+
+    use mise
+
+    [[ -f .envrc.local ]] && source_env .envrc.local
+  '';
+
+  # ── mise pinned versions for ~/xsolis/ (Node 20, .NET 8) ──
+  # Subprojects can override by committing their own .mise.toml or global.json.
+  home.file."xsolis/.mise.toml".text = ''
+    [tools]
+    node = "20"
+    dotnet = "8"
+  '';
 }
