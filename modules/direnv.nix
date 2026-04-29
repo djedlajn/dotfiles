@@ -14,6 +14,7 @@
         prefix = [
           "~/projects"
           "~/code"
+          "~/xsolis"
         ];
       };
     };
