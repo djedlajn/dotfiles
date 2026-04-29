@@ -50,9 +50,10 @@ removing one import line.
 
 **Responsibilities:**
 
-1. Add packages: `dotnet-sdk_8`, `granted`.
+1. Add packages: `dotnet-sdk_8`, `granted`, `liquibase`.
    (`awscli2`, `mise`, `direnv` already exist in `home/kadza.nix` and
-   `modules/direnv.nix`.)
+   `modules/direnv.nix`. Java for Liquibase is already provided by `zulu17`
+   in `home/kadza.nix:117`.)
 2. Write declarative config files via `home.file`:
    - `~/.aws/config`
    - `~/xsolis/.envrc`
@@ -206,6 +207,7 @@ home.activation.aws-codeartifact-nuget = lib.hm.dag.entryAfter [ "writeBoundary"
 | Switch to Integration account temporarily | `assume xsolis-int` (Granted) |
 | Open AWS console as a role | `assume -c xsolis-dev` (Granted) |
 | Scaffold `nuget.config` for a new project | `xsolis-nuget-init xsolis-cortex-core` |
+| Run database migrations | `liquibase ...` (available globally; only used inside xsolis projects in practice) |
 
 ## Bootstrap Sequence (Fresh Machine)
 
