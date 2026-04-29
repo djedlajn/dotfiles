@@ -22,6 +22,9 @@
     ../modules/git.nix
     ../modules/lazygit.nix
 
+    # Work
+    ../modules/xsolis.nix
+
     # Security & SSH
     ../modules/bitwarden.nix
     ../modules/sops.nix
