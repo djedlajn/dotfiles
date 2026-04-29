@@ -44,7 +44,7 @@
     casks = [
       "nikitabobko/tap/aerospace"  # Tiling window manager
       "bitwarden"             # Password manager with SSH agent
-      "claude-code"           # Claude AI CLI
+      # claude-code managed via home-manager activation script
       "command-x"             # Cut and paste files in Finder
       "dockutil"              # macOS dock management
       "font-jetbrains-mono-nerd-font"  # JetBrainsMono with Nerd Font icons
@@ -78,7 +78,13 @@
   # Primary user for user-specific system options (homebrew, etc.)
   system.primaryUser = "kadza";
 
-  # nix.settings is managed by Determinate Nix (nix.enable = false above)
+  # Declaratively manage nix.custom.conf (nix.settings disabled by nix.enable = false)
+  # Determinate Nix includes this via !include in /etc/nix/nix.conf
+  environment.etc."nix/nix.custom.conf".text = ''
+    # Extra binary caches (faster than Hydra for aarch64-darwin)
+    extra-substituters = https://nix-community.cachix.org https://cache.garnix.io
+    extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+  '';
   system.configurationRevision = null; # Set by flake.nix
   system.stateVersion = 6;
   nixpkgs.hostPlatform = "aarch64-darwin";

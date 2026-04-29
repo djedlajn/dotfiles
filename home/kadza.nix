@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   imports = [
     # Shell & Prompt
@@ -131,6 +131,7 @@
     # Go (already in system packages)
     # Rust (already in system packages via rust-overlay)
 
+    cocoapods       # iOS dependency manager
     tree-sitter     # Parser generator
 
     # ─────────────────────────────────────────────────────────────
@@ -173,6 +174,11 @@
     mise            # Version manager (polyglot)
 
   ];
+
+  # Claude Code - install/update via official script on each activation
+  home.activation.claude-code = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run --quiet ${pkgs.bash}/bin/bash -c 'export PATH="${pkgs.curl}/bin:${pkgs.coreutils}/bin:${pkgs.perl}/bin:$PATH"; curl -fsSL https://claude.ai/install.sh | bash'
+  '';
 
   home.stateVersion = "25.05";
 }

@@ -36,9 +36,10 @@
       RIPGREP_CONFIG_PATH = "$HOME/.config/ripgrep/config";
       MANPAGER = "sh -c 'col -bx | bat -l man -p'";
       SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
+      ANDROID_HOME = "$HOME/Library/Android/sdk";
 
       # PATH additions (minimal - nix handles most tools)
-      PATH = "$HOME/.local/bin:$HOME/.local/share/mise/shims:$HOME/.config/jetbrains:$PATH";
+      PATH = "$HOME/.local/bin:$HOME/.local/share/mise/shims:$HOME/.config/jetbrains:$ANDROID_HOME/platform-tools:$PATH";
     };
 
     oh-my-zsh = {

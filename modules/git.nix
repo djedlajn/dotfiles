@@ -91,6 +91,15 @@
     ];
 
     includes = [
+      {
+        condition = "gitdir:~/xsolis/";
+        contents = {
+          user = {
+            email = "ukaric@xsolis.com";
+            name = "Uros Karic";
+          };
+        };
+      }
     ];
   };
 

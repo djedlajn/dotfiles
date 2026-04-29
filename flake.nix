@@ -41,6 +41,9 @@
                   CGO_ENABLED = "1";
                 };
               });
+              nushell = prev.nushell.overrideAttrs (old: {
+                doCheck = false;
+              });
             })
           ];
           nixpkgs.config.allowUnfreePredicate = pkg:
