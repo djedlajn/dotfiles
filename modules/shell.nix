@@ -38,8 +38,12 @@
       SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
       ANDROID_HOME = "$HOME/Library/Android/sdk";
 
+      # Pre-trust xsolis mise config (managed by home-manager via nix store
+      # symlinks, which mise distrusts on every rebuild without this).
+      MISE_TRUSTED_CONFIG_PATHS = "$HOME/xsolis";
+
       # PATH additions (minimal - nix handles most tools)
-      PATH = "$HOME/.local/bin:$HOME/.local/share/mise/shims:$HOME/.config/jetbrains:$ANDROID_HOME/platform-tools:$PATH";
+      PATH = "$HOME/.local/bin:$HOME/.dotnet/tools:$HOME/.local/share/mise/shims:$HOME/.config/jetbrains:$ANDROID_HOME/platform-tools:$PATH";
     };
 
     oh-my-zsh = {
@@ -171,6 +175,10 @@
       # Tools
       zj = "zellij";
       tv = "television";
+
+      # Xsolis
+      xsl-login = "aws sso login --sso-session xsolis";
+      xsl-whoami = "aws sts get-caller-identity";
     };
   };
 } 
