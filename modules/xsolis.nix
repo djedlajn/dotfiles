@@ -7,6 +7,31 @@
     dotnet-sdk_8   # .NET 8 SDK (runs .NET 6 projects too)
     granted        # AWS SSO profile UX (assume, console)
     liquibase      # Database schema migrations
+
+    (writeShellScriptBin "xsolis-nuget-init" ''
+      # Scaffold nuget.config in the current dir with xsolis-nuget-store + any
+      # extra repo names passed as args.
+      # Usage: xsolis-nuget-init [extra-repo-name ...]
+      # Example: xsolis-nuget-init xsolis-cortex-core
+      set -euo pipefail
+
+      ACCT=370752999763
+      REGION=us-east-1
+      DOMAIN=xsolis-development
+
+      ${dotnet-sdk_8}/bin/dotnet new nugetconfig --force >/dev/null
+      ${dotnet-sdk_8}/bin/dotnet nuget add source \
+        "https://''${DOMAIN}-''${ACCT}.d.codeartifact.''${REGION}.amazonaws.com/nuget/xsolis-nuget-store/v3/index.json" \
+        -n "xsolis-development/xsolis-nuget-store" --configfile ./nuget.config
+
+      for repo in "$@"; do
+        ${dotnet-sdk_8}/bin/dotnet nuget add source \
+          "https://''${DOMAIN}-''${ACCT}.d.codeartifact.''${REGION}.amazonaws.com/nuget/''${repo}/v3/index.json" \
+          -n "xsolis-development/''${repo}" --configfile ./nuget.config
+      done
+
+      echo "✓ nuget.config written. Sources: xsolis-nuget-store $*"
+    '')
   ];
 
   # ── AWS SSO config ──
