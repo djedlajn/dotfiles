@@ -112,4 +112,15 @@
     node = "20"
     dotnet = "8"
   '';
+
+  # ── AWS CodeArtifact NuGet credential provider ──
+  # Installs as a dotnet global tool to ~/.dotnet/tools (on PATH from
+  # modules/shell.nix). NuGet picks it up automatically when restoring
+  # against codeartifact.*.amazonaws.com sources.
+  # Idempotent: `update` is a no-op if same version is installed; `install`
+  # is the first-time path. The `||` chain handles both.
+  home.activation.aws-codeartifact-nuget = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run --quiet ${pkgs.dotnet-sdk_8}/bin/dotnet tool update -g AWS.CodeArtifact.NuGet.CredentialProvider \
+      || run --quiet ${pkgs.dotnet-sdk_8}/bin/dotnet tool install -g AWS.CodeArtifact.NuGet.CredentialProvider
+  '';
 }
