@@ -20,6 +20,9 @@
       DOMAIN=xsolis-development
 
       ${dotnet-sdk_8}/bin/dotnet new nugetconfig --force >/dev/null
+      # Remove the default api.nuget.org source — xsolis-nuget-store is the
+      # proxy for public packages.
+      ${dotnet-sdk_8}/bin/dotnet nuget remove source nuget --configfile ./nuget.config >/dev/null
       ${dotnet-sdk_8}/bin/dotnet nuget add source \
         "https://''${DOMAIN}-''${ACCT}.d.codeartifact.''${REGION}.amazonaws.com/nuget/xsolis-nuget-store/v3/index.json" \
         -n "xsolis-development/xsolis-nuget-store" --configfile ./nuget.config
