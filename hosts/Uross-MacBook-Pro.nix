@@ -30,7 +30,10 @@
     # Activation behavior
     onActivation = {
       autoUpdate = true;       # Update brew index on rebuild
-      cleanup = "zap";         # Remove unlisted packages & casks
+      # cleanup = "zap";       # Disabled: nix-darwin#1774 — brew bundle now
+      #                          rejects `--cleanup --zap` without --force-cleanup.
+      #                          Re-enable once upstream patches the activation script.
+      cleanup = "none";
       upgrade = true;          # Upgrade packages on rebuild
     };
 
@@ -77,6 +80,16 @@
 
   # Primary user for user-specific system options (homebrew, etc.)
   system.primaryUser = "kadza";
+
+  # Touch ID for sudo (e.g. in Ghostty). Writes /etc/pam.d/sudo_local,
+  # which macOS includes from /etc/pam.d/sudo and preserves across OS updates.
+  security.pam.services.sudo_local.touchIdAuth = true;
+
+  # pam_reattach re-attaches sudo to the GUI (Aqua) bootstrap session so the
+  # Touch ID prompt appears even when sudo runs inside a terminal multiplexer
+  # (zellij/tmux). Without it, sudo inside zellij silently falls back to a
+  # password prompt. nix-darwin orders pam_reattach before pam_tid.
+  security.pam.services.sudo_local.reattach = true;
 
   # Declaratively manage nix.custom.conf (nix.settings disabled by nix.enable = false)
   # Determinate Nix includes this via !include in /etc/nix/nix.conf
