@@ -184,4 +184,8 @@
   '';
 
   home.stateVersion = "25.05";
+
+  # Tracking nixpkgs-unstable; home-manager master hasn't bumped its version
+  # constant to match, so silence the mismatch warning.
+  home.enableNixpkgsReleaseCheck = false;
 }
