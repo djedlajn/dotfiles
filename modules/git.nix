@@ -97,7 +97,12 @@
           user = {
             email = "ukaric@xsolis.com";
             name = "Uros Karic";
+            # Dedicated xsolis-only GPG key (Ed25519, generated 2026-04-30).
+            # Personal commits keep using the SSH signing config from the
+            # base block above; this overrides format + key just for ~/xsolis/.
+            signingKey = "2C659FE5EAAAB7DA1862BB1CD76F722758F89B58";
           };
+          gpg.format = "openpgp";
         };
       }
     ];
