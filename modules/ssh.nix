@@ -18,13 +18,12 @@
       ForwardAgent yes
     '';
 
-    matchBlocks = {
+    settings = {
       # Default for all hosts
       "*" = {
         # Traditional key as fallback when Bitwarden unavailable
         identityFile = "~/.ssh/id_ed25519";
       };
-
     };
   };
 }
