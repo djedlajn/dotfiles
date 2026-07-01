@@ -38,12 +38,16 @@
       SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
       ANDROID_HOME = "$HOME/Library/Android/sdk";
 
+      # Send `npm install -g` to a user-writable prefix instead of the
+      # read-only Nix store (fixes EACCES mkdir under nix/devshell node).
+      NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+
       # Pre-trust xsolis mise config (managed by home-manager via nix store
       # symlinks, which mise distrusts on every rebuild without this).
       MISE_TRUSTED_CONFIG_PATHS = "$HOME/xsolis";
 
       # PATH additions (minimal - nix handles most tools)
-      PATH = "$HOME/.local/bin:$HOME/.dotnet/tools:$HOME/.local/share/mise/shims:$HOME/.config/jetbrains:$ANDROID_HOME/platform-tools:$PATH";
+      PATH = "$HOME/.local/bin:$HOME/.npm-global/bin:$HOME/.dotnet/tools:$HOME/.local/share/mise/shims:$HOME/.config/jetbrains:$ANDROID_HOME/platform-tools:$PATH";
     };
 
     oh-my-zsh = {
@@ -55,7 +59,6 @@
         "macos"
         "colored-man-pages"
         "command-not-found"
-        "kubectl"
       ];
     };
 
