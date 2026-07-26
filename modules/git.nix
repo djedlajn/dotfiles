@@ -1,5 +1,11 @@
 # Git configuration with SSH commit signing
-{ config, pkgs, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   programs.git = {
     enable = true;
 
@@ -38,7 +44,7 @@
       merge.conflictstyle = "diff3";
       diff.colorMoved = "default";
       diff.algorithm = "histogram";
-      credential.helper = "/opt/homebrew/bin/gh auth git-credential";
+      credential.helper = "${lib.getExe pkgs.gh} auth git-credential";
       core = {
         editor = "vim";
         autocrlf = "input";

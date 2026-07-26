@@ -17,18 +17,24 @@
 
         # Catppuccin Mocha theme
         theme = {
-          activeBorderColor = [ "#cba6f7" "bold" ];       # mauve
-          inactiveBorderColor = [ "#a6adc8" ];            # subtext0
-          searchingActiveBorderColor = [ "#f9e2af" "bold" ]; # yellow
-          optionsTextColor = [ "#89b4fa" ];               # blue
-          selectedLineBgColor = [ "#313244" ];            # surface0
+          activeBorderColor = [
+            "#cba6f7"
+            "bold"
+          ]; # mauve
+          inactiveBorderColor = [ "#a6adc8" ]; # subtext0
+          searchingActiveBorderColor = [
+            "#f9e2af"
+            "bold"
+          ]; # yellow
+          optionsTextColor = [ "#89b4fa" ]; # blue
+          selectedLineBgColor = [ "#313244" ]; # surface0
           inactiveViewSelectedLineBgColor = [ "#45475a" ]; # surface1
-          cherryPickedCommitFgColor = [ "#f38ba8" ];      # red
-          cherryPickedCommitBgColor = [ "#45475a" ];      # surface1
-          markedBaseCommitFgColor = [ "#f9e2af" ];        # yellow
-          markedBaseCommitBgColor = [ "#313244" ];        # surface0
-          unstagedChangesColor = [ "#f38ba8" ];           # red
-          defaultFgColor = [ "#cdd6f4" ];                 # text
+          cherryPickedCommitFgColor = [ "#f38ba8" ]; # red
+          cherryPickedCommitBgColor = [ "#45475a" ]; # surface1
+          markedBaseCommitFgColor = [ "#f9e2af" ]; # yellow
+          markedBaseCommitBgColor = [ "#313244" ]; # surface0
+          unstagedChangesColor = [ "#f38ba8" ]; # red
+          defaultFgColor = [ "#cdd6f4" ]; # text
         };
       };
 
@@ -50,7 +56,8 @@
       confirmOnQuit = false;
 
       customCommands = [
-        # Open in browser (PR or repo)
+        # Open in browser (PR or repo). Note: shadows lazygit's default
+        # copyToClipboard (<c-o>) in all panels — intentional trade-off.
         {
           key = "<c-o>";
           context = "global";
@@ -61,7 +68,9 @@
         {
           key = "<c-b>";
           context = "commits";
-          command = "gh browse -- \"commit/{{.SelectedLocalCommit.Hash}}\"";
+          # Bare SHA as positional arg — `gh browse -- commit/<sha>` treats it
+          # as a file path and 404s; gh resolves bare SHAs to /commit/<sha>.
+          command = "gh browse \"{{.SelectedLocalCommit.Hash}}\"";
           description = "Browse commit on GitHub";
         }
         # Create PR
