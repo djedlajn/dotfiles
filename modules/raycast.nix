@@ -16,6 +16,6 @@
 #    - System Commands
 #    - Speedtest
 #    - Tailscale
-# 4. Disable "Window Management" extension (using Aerospace instead)
+# 4. Enable or disable the "Window Management" extension to taste
 # 5. Consider syncing settings via Raycast Cloud
 { ... }: { }

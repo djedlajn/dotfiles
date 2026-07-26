@@ -1,10 +1,29 @@
 { pkgs, ... }: {
   imports = [
-    ../modules/macos.nix  # macOS system defaults
+    ../modules/macos.nix # macOS system defaults
   ];
 
-  # Disable nix-darwin's Nix management (required for Determinate Nix)
-  nix.enable = false;
+  # Nix daemon is managed by Determinate Nix; the determinate darwin module
+  # (imported in flake.nix) sets nix.enable = false and writes custom
+  # settings to /etc/nix/nix.custom.conf, which Determinate includes from
+  # /etc/nix/nix.conf.
+  # Continuous background garbage collection by Determinate Nixd.
+  # Old profile generations still need `ngc` (nh clean) to become collectable.
+  determinateNix.determinateNixd.garbageCollector.strategy = "automatic";
+
+  determinateNix.customSettings = {
+    # Extra binary caches (faster than Hydra for aarch64-darwin)
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://cache.garnix.io"
+      "https://claude-code.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
+    ];
+  };
 
   # Basic system shell support (minimal - just to enable as default shell)
   programs.zsh.enable = true;
@@ -18,7 +37,10 @@
     pkgs.slides
     pkgs.pulumi
     (pkgs.rust-bin.stable.latest.default.override {
-      extensions = [ "rust-src" "rust-analyzer" ];
+      extensions = [
+        "rust-src"
+        "rust-analyzer"
+      ];
     })
     pkgs.go
   ];
@@ -29,40 +51,36 @@
 
     # Activation behavior
     onActivation = {
-      autoUpdate = true;       # Update brew index on rebuild
-      # cleanup = "zap";       # Disabled: nix-darwin#1774 — brew bundle now
-      #                          rejects `--cleanup --zap` without --force-cleanup.
-      #                          Re-enable once upstream patches the activation script.
-      cleanup = "none";
-      upgrade = true;          # Upgrade packages on rebuild
+      autoUpdate = true; # Update brew index on rebuild
+      # Uninstall + purge anything not declared below. Was temporarily "none"
+      # for nix-darwin#1774; the pinned nix-darwin now passes --force-cleanup.
+      cleanup = "zap";
+      upgrade = true; # Upgrade packages on rebuild
     };
 
     # Custom taps
     taps = [
-      "anomalyco/tap"         # opencode
-      "nikitabobko/tap"       # AeroSpace
+      "anomalyco/tap" # opencode
     ];
 
     # GUI apps (casks) - Only macOS-specific apps not available in nixpkgs
     casks = [
-      "nikitabobko/tap/aerospace"  # Tiling window manager
-      "bitwarden"             # Password manager with SSH agent
-      # claude-code managed via home-manager activation script
-      "command-x"             # Cut and paste files in Finder
-      "dockutil"              # macOS dock management
-      "font-jetbrains-mono-nerd-font"  # JetBrainsMono with Nerd Font icons
-      "font-liberation"       # Liberation fonts
-      "ghostty"               # Terminal emulator (not in nixpkgs for macOS)
-      "headlamp"              # Kubernetes GUI IDE
-      "ngrok"                 # Tunneling service
-      "raycast"               # Spotlight replacement
-      "session-manager-plugin" # AWS SSM (not in nixpkgs)
-      "the-unarchiver"        # macOS archive utility
+      "bitwarden" # Password manager with SSH agent
+      # claude-code managed declaratively via programs.claude-code (home-manager)
+      "command-x" # Cut and paste files in Finder
+      "dockutil" # macOS dock management
+      "font-jetbrains-mono-nerd-font" # JetBrainsMono with Nerd Font icons
+      "font-liberation" # Liberation fonts
+      "ghostty" # Terminal emulator (cask kept for Sparkle auto-updates; nixpkgs now has ghostty-bin)
+      "headlamp" # Kubernetes GUI IDE
+      "ngrok" # Tunneling service
+      "raycast" # Spotlight replacement
+      "the-unarchiver" # macOS archive utility
     ];
 
     # CLI tools not in nixpkgs (if any)
     brews = [
-      "anomalyco/tap/opencode"  # AI coding agent (nix pkg outdated)
+      "anomalyco/tap/opencode" # AI coding agent (nix pkg outdated)
     ];
 
     # Mac App Store apps (requires `mas` CLI)
@@ -71,11 +89,16 @@
     };
   };
 
-  # User definition
+  # User definition. knownUsers makes nix-darwin manage this account record
+  # via dscl — without it the `shell` attribute is silently ignored on
+  # activation. Do NOT remove the users.users.kadza block while "kadza" is in
+  # knownUsers: nix-darwin deletes known users that are no longer declared.
+  users.knownUsers = [ "kadza" ];
   users.users.kadza = {
     name = "kadza";
     home = "/Users/kadza";
-    shell = pkgs.zsh;  # Set zsh as default shell
+    uid = 501; # required (and verified) for knownUsers management
+    shell = pkgs.zsh; # Set zsh as default shell
   };
 
   # Primary user for user-specific system options (homebrew, etc.)
@@ -91,14 +114,6 @@
   # password prompt. nix-darwin orders pam_reattach before pam_tid.
   security.pam.services.sudo_local.reattach = true;
 
-  # Declaratively manage nix.custom.conf (nix.settings disabled by nix.enable = false)
-  # Determinate Nix includes this via !include in /etc/nix/nix.conf
-  environment.etc."nix/nix.custom.conf".text = ''
-    # Extra binary caches (faster than Hydra for aarch64-darwin)
-    extra-substituters = https://nix-community.cachix.org https://cache.garnix.io
-    extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
-  '';
-  system.configurationRevision = null; # Set by flake.nix
   system.stateVersion = 6;
   nixpkgs.hostPlatform = "aarch64-darwin";
 }
