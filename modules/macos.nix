@@ -1,21 +1,18 @@
 # macOS System Defaults
 # Declarative macOS system preferences via nix-darwin
 # Changes require logout/restart to take full effect
-{ ... }: {
+{ config, ... }: {
 
-  # ═══════════════════════════════════════════════════════════════════
-  # Security
-  # ═══════════════════════════════════════════════════════════════════
-  # Enable Touch ID for sudo
-  security.pam.services.sudo_local.touchIdAuth = true;
+  # Touch ID for sudo lives in hosts/Uross-MacBook-Pro.nix
+  # (security.pam.services.sudo_local, together with pam_reattach).
 
   # ═══════════════════════════════════════════════════════════════════
   # Keyboard
   # ═══════════════════════════════════════════════════════════════════
   system.defaults.NSGlobalDomain = {
     # Key repeat speed (lower = faster)
-    KeyRepeat = 2;              # Fast repeat (default: 6)
-    InitialKeyRepeat = 15;      # Short delay before repeat (default: 25)
+    KeyRepeat = 2; # Fast repeat (default: 6)
+    InitialKeyRepeat = 15; # Short delay before repeat (default: 25)
 
     # Disable press-and-hold for special characters (enables key repeat)
     ApplePressAndHoldEnabled = false;
@@ -30,7 +27,8 @@
     NSAutomaticQuoteSubstitutionEnabled = false;
     NSAutomaticSpellingCorrectionEnabled = false;
 
-    # Enable subpixel font rendering on non-Apple LCDs
+    # Lighter font smoothing (glyph dilation). Subpixel AA was removed in
+    # macOS 10.14; many modern apps ignore this key entirely.
     AppleFontSmoothing = 1;
 
     # Expand save panel by default
@@ -54,7 +52,7 @@
   system.defaults.dock = {
     # Auto-hide dock
     autohide = true;
-    autohide-delay = 0.0;         # No delay before showing
+    autohide-delay = 0.0; # No delay before showing
     autohide-time-modifier = 0.4; # Animation speed
 
     # Dock size and magnification
@@ -63,10 +61,10 @@
     largesize = 48;
 
     # Position
-    orientation = "bottom";       # bottom, left, right
+    orientation = "bottom"; # bottom, left, right
 
     # Minimize effect
-    mineffect = "scale";          # genie, scale, suck
+    mineffect = "scale"; # genie, scale, suck
 
     # Don't show recent apps
     show-recents = false;
@@ -98,7 +96,7 @@
     ShowStatusBar = true;
 
     # Default view style (icnv, Nlsv, clmv, Flwv)
-    FXPreferredViewStyle = "clmv";  # Column view
+    FXPreferredViewStyle = "clmv"; # Column view
 
     # Search current folder by default
     FXDefaultSearchScope = "SCcf";
@@ -139,7 +137,10 @@
   # Screenshots
   # ═══════════════════════════════════════════════════════════════════
   system.defaults.screencapture = {
-    location = "~/Pictures/Screenshots";
+    # Absolute path — nix-darwin writes the value verbatim and the screenshot
+    # daemon's tilde expansion is undocumented/inconsistent across releases.
+    # The directory itself is created by home.activation.screenshotsDir.
+    location = "${config.users.users.kadza.home}/Pictures/Screenshots";
     type = "png";
     disable-shadow = true;
   };
@@ -165,7 +166,7 @@
   # ═══════════════════════════════════════════════════════════════════
   system.defaults.loginwindow = {
     # Show username/password fields instead of user list
-    SHOWFULLNAME = false;
+    SHOWFULLNAME = true;
 
     # Disable guest account
     GuestEnabled = false;
@@ -177,8 +178,8 @@
   system.defaults.CustomUserPreferences = {
     # Three-finger gestures for Spaces & Mission Control
     "com.apple.AppleMultitouchTrackpad" = {
-      TrackpadThreeFingerHorizSwipeGesture = 2;  # Swipe between Spaces
-      TrackpadThreeFingerVertSwipeGesture = 2;   # Mission Control (up) / App Exposé (down)
+      TrackpadThreeFingerHorizSwipeGesture = 2; # Swipe between Spaces
+      TrackpadThreeFingerVertSwipeGesture = 2; # Mission Control (up) / App Exposé (down)
     };
 
     # Prevent Photos from opening automatically when devices are plugged in
