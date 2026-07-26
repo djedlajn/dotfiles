@@ -11,11 +11,9 @@
 #   - If Bitwarden socket exists → use Bitwarden SSH agent
 #   - Otherwise → fall back to macOS system SSH agent
 #   - Traditional keys in ~/.ssh/ always available as IdentityFile fallback
-{ config, lib, ... }:
+{ config, ... }:
 let
-  homeDir = config.home.homeDirectory;
-  bitwardenSocket = "${homeDir}/.bitwarden-ssh-agent.sock";
-  systemSocket = "/private/tmp/com.apple.launchd.*/Listeners";
+  bitwardenSocket = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
 in
 {
   # Shell initialization for SSH_AUTH_SOCK with fallback
