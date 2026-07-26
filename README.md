@@ -19,22 +19,30 @@ docs/                  # Quick reference
 # Install Nix
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 
-# Clone & apply
+# Clone & apply (first activation; nix-darwin is not on PATH yet)
 git clone https://github.com/djedlajn/dotfiles ~/.config/nix
-cd ~/.config/nix && darwin-rebuild switch --flake .
+cd ~/.config/nix && sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake .#Uross-MacBook-Pro
 ```
+
+Subsequent rebuilds use `nrs` (nh handles privilege escalation).
 
 ## Day-to-day
 
 ```bash
-nfu     # Update all flake inputs
-nrs     # Rebuild & switch (nh, with diffs)
-nrb     # Build without switching
+nfu       # Update all flake inputs
+nrs       # Rebuild & switch (nh, with diffs)
+nrb       # Build without switching
+nfc       # nix flake check — builds the system + verifies formatting
+ngc       # Clean old generations + GC + dedup the store
+nix fmt   # Format all .nix files (nixfmt via treefmt)
 ```
+
+Background garbage collection runs automatically (Determinate Nixd); `ngc` is
+for reclaiming old profile generations on demand.
 
 ## Stack
 
-**Terminal:** Ghostty, Zellij, Starship (transient prompt)
+**Terminal:** Ghostty, Zellij, Starship
 
 **Shell:** Zsh + oh-my-zsh, fzf-tab, zsh-autopair, atuin, zoxide, direnv
 
@@ -42,13 +50,15 @@ nrb     # Build without switching
 
 **Git:** lazygit, delta, jujutsu, difftastic, gh
 
+**AI:** Claude Code (declarative via claude-code-nix, hourly updates + cachix), herdr, opencode (brew)
+
 **Languages:** Rust (overlay), Go, Node 24, Bun, Python 3 + uv, Elixir 1.18, Java 17
 
 **Cloud:** awscli2, kubectl, helm, k9s, stern, kubectx, packer, cloudflared
 
-**Security:** Bitwarden SSH Agent, sops + age, SSH commit signing, Touch ID sudo
+**Security:** Bitwarden SSH Agent, sops + age, SSH commit signing (GPG inside ~/xsolis), Touch ID sudo
 
-**macOS:** AeroSpace (optional), Raycast, fast key repeat, auto-hide dock, Finder tweaks
+**macOS:** Raycast, fast key repeat, auto-hide dock, Finder tweaks
 
 **Theme:** Catppuccin Mocha (everywhere)
 
