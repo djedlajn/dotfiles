@@ -15,10 +15,10 @@
     };
 
     extraPackages = with pkgs.bat-extras; [
-      batdiff    # Diff with syntax highlighting
-      batman     # Man pages with syntax highlighting
-      batgrep    # Ripgrep with bat previews
-      batwatch   # Watch files with syntax highlighting
+      batdiff # Diff with syntax highlighting
+      batman # Man pages with syntax highlighting
+      batgrep # Ripgrep with bat previews
+      batwatch # Watch files with syntax highlighting
     ];
 
     # Catppuccin Mocha theme

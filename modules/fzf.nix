@@ -9,7 +9,7 @@
       "--height 50%"
       "--layout=reverse"
       "--border=rounded"
-      "--inline-info"
+      "--info=inline"
       "--preview 'bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {}'"
       "--preview-window=right:50%:wrap"
       "--bind=ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
@@ -19,21 +19,22 @@
     ];
 
     # Alt+C: cd into selected directory
-    changeDirWidgetCommand = "fd --type d --hidden --follow --exclude .git";
-    changeDirWidgetOptions = [
-      "--preview 'eza --tree --level=2 --icons --color=always {} | head -100'"
-    ];
+    changeDirWidget = {
+      command = "fd --type d --hidden --follow --exclude .git";
+      options = [
+        "--preview 'eza --tree --level=2 --icons --color=always {} | head -100'"
+      ];
+    };
 
     # Ctrl+T: paste selected file path
-    fileWidgetCommand = "fd --type f --hidden --follow --exclude .git";
-    fileWidgetOptions = [
-      "--preview 'bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {}'"
-    ];
+    fileWidget = {
+      command = "fd --type f --hidden --follow --exclude .git";
+      options = [
+        "--preview 'bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {}'"
+      ];
+    };
 
-    # Ctrl+R: search history
-    historyWidgetOptions = [
-      "--sort"
-      "--exact"
-    ];
+    # Ctrl+R belongs to atuin (modules/atuin.nix); disable fzf's history widget
+    historyWidget.command = "";
   };
-} 
+}

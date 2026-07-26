@@ -3,7 +3,6 @@
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
-    enableTransience = true;
 
     settings = {
       add_newline = false;
@@ -28,14 +27,14 @@
         truncation_length = 3;
         truncation_symbol = "…/";
         style = "bold blue";
-        format = "[ $path]($style) ";  # nf-fa-folder_open
+        format = "[ $path]($style) "; # nf-fa-folder_open
       };
 
       # ─────────────────────────────────────────────────────────────
       # Git
       # ─────────────────────────────────────────────────────────────
       git_branch = {
-        format = "[ $branch]($style) ";  # nf-dev-git_branch
+        format = "[ $branch]($style) "; # nf-dev-git_branch
         style = "bold mauve";
         truncation_symbol = "…";
         truncation_length = 20;
@@ -60,18 +59,25 @@
       # Languages - with nf-dev icons
       # ─────────────────────────────────────────────────────────────
       nodejs = {
-        format = "[ $version](bold green) ";  # nf-dev-nodejs
-        detect_files = [ "package-lock.json" "yarn.lock" "package.json" ];
+        format = "[ $version](bold green) "; # nf-dev-nodejs
+        detect_files = [
+          "package-lock.json"
+          "yarn.lock"
+          "package.json"
+        ];
         detect_folders = [ "node_modules" ];
       };
 
       bun = {
         format = "[ $version](bold peach) ";
-        detect_files = [ "bun.lock" "bunfig.toml" ];
+        detect_files = [
+          "bun.lock"
+          "bunfig.toml"
+        ];
       };
 
       java = {
-        format = "[ $version](bold red) ";  # nf-dev-java
+        format = "[ $version](bold red) "; # nf-dev-java
       };
 
       kotlin = {
@@ -79,26 +85,26 @@
       };
 
       rust = {
-        format = "[ $version](bold peach) ";  # nf-dev-rust
+        format = "[ $version](bold peach) "; # nf-dev-rust
       };
 
       golang = {
-        format = "[ $version](bold sky) ";  # nf-dev-go
+        format = "[ $version](bold sky) "; # nf-dev-go
       };
 
       python = {
-        format = "[ $version](bold yellow) ";  # nf-dev-python
+        format = "[ $version](bold yellow) "; # nf-dev-python
       };
 
       package = {
-        format = "[ $version](dimmed) ";  # nf-oct-package
+        format = "[ $version](dimmed) "; # nf-oct-package
       };
 
       # ─────────────────────────────────────────────────────────────
       # Nix shell
       # ─────────────────────────────────────────────────────────────
       nix_shell = {
-        format = "[󱄅 $state]($style) ";  # nf-linux-nixos
+        format = "[󱄅 $state]($style) "; # nf-linux-nixos
         style = "bold sky";
       };
 

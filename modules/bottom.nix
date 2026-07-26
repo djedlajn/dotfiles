@@ -51,18 +51,20 @@
     selected_text = { color = "#1e1e2e", bg_color = "#cba6f7" } # base, mauve
     disabled_text = { color = "#6c7086" } # overlay0
 
-    # General settings
+    # General settings (schema verified against bottom 0.14: tree/enable_gpu/
+    # enable_cache_memory/hide_* moved or were removed from [flags])
     [flags]
     dot_marker = false
     rate = "1s"
     default_widget_type = "proc"
-    hide_avg_cpu = false
-    hide_table_gap = true
-    left_legend = false
+    table_gap = "none"
     show_table_scroll_position = true
-    tree = true
     battery = true
-    enable_gpu = true
-    enable_cache_memory = true
+
+    [processes]
+    default_tree = true
+
+    [memory]
+    cache_memory = true
   '';
 }

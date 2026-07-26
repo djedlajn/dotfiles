@@ -20,12 +20,9 @@
     };
 
     stdlib = ''
-      # Use nix flake if flake.nix exists
-      use_flake() {
-        watch_file flake.nix
-        watch_file flake.lock
-        eval "$(nix print-dev-env --accept-flake-config)"
-      }
+      # NOTE: no custom use_flake here — direnv sources lib/*.sh before
+      # direnvrc, so defining one would shadow nix-direnv's use_flake and
+      # silently disable its eval caching and GC-root pinning.
 
       # Layout for node projects
       layout_node() {
@@ -45,11 +42,6 @@
       # Use mise/rtx for version management
       use_mise() {
         direnv_load mise direnv exec
-      }
-
-      # Use asdf for version management
-      use_asdf() {
-        source_env "$(asdf direnv envrc)"
       }
     '';
   };

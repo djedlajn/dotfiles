@@ -158,6 +158,9 @@
       nrb = "nh darwin build ~/.config/nix";
       nfu = "nix flake update --flake ~/.config/nix";
       nfc = "nix flake check ~/.config/nix";
+      # Clean old generations (keep 3 / last 7d), GC the store, then
+      # hardlink-dedup what remains.
+      ngc = "nh clean all --keep 3 --keep-since 7d && nix store optimise";
       nsh = "nix-shell";
       nsp = "nix search nixpkgs";
 
@@ -177,11 +180,6 @@
 
       # Tools
       zj = "zellij";
-      tv = "television";
-
-      # Xsolis
-      xsl-login = "aws sso login --sso-session xsolis";
-      xsl-whoami = "aws sts get-caller-identity";
     };
   };
-} 
+}

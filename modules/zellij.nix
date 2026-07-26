@@ -3,24 +3,9 @@
     // Catppuccin Mocha theme
     theme "catppuccin-mocha"
 
-    keybinds {
-        normal {
-            bind "Ctrl g" { SwitchToMode "locked"; }
-            bind "Ctrl p" { SwitchToMode "pane"; }
-            bind "Alt n" { NewPane; }
-            bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
-        }
-        pane {
-            bind "h" "Left" { MoveFocus "Left"; }
-            bind "l" "Right" { MoveFocus "Right"; }
-            bind "j" "Down" { MoveFocus "Down"; }
-            bind "k" "Up" { MoveFocus "Up"; }
-            bind "p" { SwitchFocus; }
-        }
-        locked {
-            bind "Ctrl g" { SwitchToMode "normal"; }
-        }
-    }
+    // Stock keybinds — a previous keybinds block here reproduced zellij's
+    // defaults verbatim (merge was a no-op). Add custom binds deliberately,
+    // with clear-defaults considered, if ever needed.
 
     // Catppuccin Mocha palette
     themes {
@@ -39,4 +24,4 @@
         }
     }
   '';
-} 
+}
