@@ -4,11 +4,11 @@
 # deleting one import line in home/kadza.nix.
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    dotnet-sdk_8   # .NET 8 SDK (runs .NET 6 projects too)
-    granted        # AWS SSO profile UX (assume, console)
-    liquibase      # Database schema migrations
-    gnupg          # GPG for xsolis commit signing (key: ukaric@xsolis.com)
-    pinentry_mac   # macOS GUI passphrase prompt (used by gpg-agent if a passphrase is added later)
+    dotnet-sdk_8 # .NET 8 SDK (runs .NET 6 projects too)
+    granted # AWS SSO profile UX (assume, console)
+    liquibase # Database schema migrations
+    gnupg # GPG for xsolis commit signing (key: ukaric@xsolis.com)
+    pinentry_mac # macOS GUI passphrase prompt (used by gpg-agent if a passphrase is added later)
 
     (writeShellScriptBin "xsolis-nuget-init" ''
       # Scaffold nuget.config in the current dir with the standard xsolis
@@ -105,13 +105,38 @@
         --region "$REGION" \
         --repository "$REPO"
     '')
+
+    (writeShellScriptBin "claude-xsolis" ''
+      # Claude Code on the xsolis enterprise subscription. A separate
+      # CLAUDE_CONFIG_DIR means a separate OAuth login (Keychain credential is
+      # keyed per config dir — verified: a fresh dir reports "Not logged in"),
+      # while the symlinks defined in this module share memory, skills,
+      # plugins and settings with the personal ~/.claude profile.
+      #
+      # Tripwire: if Claude Code ever saves settings.json/CLAUDE.md via
+      # write-temp-then-rename, the file-level symlink is replaced by a real
+      # file and the profiles silently fork (the next home-manager switch
+      # would park the fork as *.backup and relink, losing its edits).
+      for f in settings.json CLAUDE.md; do
+        if [ -e "$HOME/.claude-xsolis/$f" ] && [ ! -L "$HOME/.claude-xsolis/$f" ]; then
+          echo "warn: ~/.claude-xsolis/$f is no longer a symlink — it forked from ~/.claude; reconcile before the next rebuild parks it as $f.backup" >&2
+        fi
+      done
+      export CLAUDE_CONFIG_DIR="$HOME/.claude-xsolis"
+      exec claude "$@"
+    '')
   ];
 
-  # ── granted (assume) shell wrapper ──
+  # ── xsolis shell aliases ──
   # `assume` must be sourced (not executed) so it can export AWS_PROFILE +
   # session creds into the current shell. zsh's `source` resolves bare names
   # via $PATH, so this finds the script shipped by the granted package.
-  programs.zsh.shellAliases.assume = "source assume";
+  # xsl-* live here (not shell.nix) so removing this module removes them too.
+  programs.zsh.shellAliases = {
+    assume = "source assume";
+    xsl-login = "aws sso login --sso-session xsolis";
+    xsl-whoami = "aws sts get-caller-identity";
+  };
 
   # ── AWS SSO config ──
   # Sources: account IDs / start URL from xsolis Okta SSO portal.
@@ -175,6 +200,11 @@
     # this into every subdir of ~/xsolis/.
     export NPM_CONFIG_USERCONFIG="$HOME/xsolis/.npmrc"
 
+    # Opt-in: uncomment to make plain `claude` (and anything launched from
+    # here, e.g. herdr) use the xsolis work profile automatically instead of
+    # needing the explicit claude-xsolis command.
+    # export CLAUDE_CONFIG_DIR="$HOME/.claude-xsolis"
+
     # Cheap local check — looks for a non-expired SSO token cache file.
     # Avoids a network call to STS on every `cd`.
     if ! find "$HOME/.aws/sso/cache" -name '*.json' -mmin -480 2>/dev/null | grep -q .; then
@@ -203,6 +233,23 @@
 
     [[ -f .envrc.local ]] && source_env .envrc.local
   '';
+
+  # ── Claude Code work profile (claude-xsolis) ──
+  # Shares the stateful parts of the personal ~/.claude profile with the
+  # xsolis one so both subscriptions see the same project memory, session
+  # transcripts, skills, plugins and settings. Account identity stays
+  # per-profile: .claude.json (onboarding, per-project trust, user-scoped MCP
+  # servers) and the OAuth credential live in ~/.claude-xsolis only.
+  home.file.".claude-xsolis/projects".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/projects";
+  home.file.".claude-xsolis/skills".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/skills";
+  home.file.".claude-xsolis/plugins".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/plugins";
+  home.file.".claude-xsolis/CLAUDE.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/CLAUDE.md";
+  home.file.".claude-xsolis/settings.json".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/settings.json";
 
   # ── mise pinned versions for ~/xsolis/ (Node 20, .NET 8) ──
   # Subprojects can override by committing their own .mise.toml or global.json.
