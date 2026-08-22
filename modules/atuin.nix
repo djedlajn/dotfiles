@@ -30,7 +30,7 @@
     enable = true;
     enableZshIntegration = true;
 
-    # Atuin owns Ctrl+R; fzf's history widget is disabled in modules/fzf.nix
+    # Atuin owns Ctrl+R; fzf's history widget is disabled in the fzf module
     flags = [
       "--disable-up-arrow" # Keep up-arrow for zsh history search
     ];

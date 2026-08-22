@@ -1,4 +1,4 @@
-{ config, ... }: {
+{ ... }: {
   home.file.".config/zellij/config.kdl".text = ''
     // Catppuccin Mocha theme
     theme "catppuccin-mocha"
