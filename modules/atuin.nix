@@ -41,9 +41,12 @@
 
       # Use catppuccin theme file
       theme.name = "catppuccin";
-      # Sync settings
-      auto_sync = false;
-      sync_frequency = "0";
+      # Sync settings — atuin server on cc-remote (nixos/atuin.nix in
+      # the dev-remote repo), tailnet-only :8889. E2E encrypted.
+      auto_sync = true;
+      sync_frequency = "5m";
+      sync_address = "http://cc-remote:8889";
+      sync.records = true;
       update_check = false;
 
       # Search settings
