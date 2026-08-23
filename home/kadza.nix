@@ -39,9 +39,6 @@
     ../modules/bitwarden.nix
     ../modules/sops.nix
     ../modules/ssh.nix
-
-    # macOS apps
-    ../modules/raycast.nix
   ];
 
   home.packages = with pkgs; [
@@ -208,19 +205,6 @@
     enable = true;
     package = inputs.claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
   };
-
-  # One-time migration from the old `curl | bash` installer: its
-  # ~/.local/bin/claude symlink shadows the nix-managed binary on PATH.
-  # Safe to delete while claude is running (macOS keeps the inode alive).
-  # Drop this block once ~/.local/bin/claude is no longer a symlink into
-  # ~/.local/share/claude and ~/.local/share/claude is gone.
-  home.activation.removeLegacyClaudeInstall = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [[ -L "$HOME/.local/bin/claude" && "$(readlink "$HOME/.local/bin/claude")" == "$HOME/.local/share/claude/"* ]]; then
-      run rm -f "$HOME/.local/bin/claude"
-      run rm -rf "$HOME/.local/share/claude"
-      noteEcho "Removed legacy claude installer (now managed by programs.claude-code)"
-    fi
-  '';
 
   # Codex CLI - declarative, from sadjow/codex-cli-nix (same author and setup
   # as claude-code above: updated hourly from OpenAI's releases, cached at

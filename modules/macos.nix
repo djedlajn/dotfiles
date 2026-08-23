@@ -41,9 +41,6 @@
 
     # Save to disk (not iCloud) by default
     NSDocumentSaveNewDocumentsToCloud = false;
-
-    # Disable "natural" scrolling (optional - comment out if you prefer natural)
-    # "com.apple.swipescrolldirection" = false;
   };
 
   # ═══════════════════════════════════════════════════════════════════
@@ -74,9 +71,6 @@
 
     # Speed up Mission Control animations
     expose-animation-duration = 0.15;
-
-    # Don't automatically rearrange Spaces
-    # mru-spaces = false;
   };
 
   # ═══════════════════════════════════════════════════════════════════
@@ -200,14 +194,4 @@
       DSDontWriteUSBStores = true;
     };
   };
-
-  # ═══════════════════════════════════════════════════════════════════
-  # Power Management (pmset via activation script)
-  # ═══════════════════════════════════════════════════════════════════
-  # system.activationScripts.postActivation.text = ''
-  #   # Disable machine sleep while charging
-  #   sudo pmset -c sleep 0
-  #   # Set display sleep to 10 minutes on battery
-  #   sudo pmset -b displaysleep 10
-  # '';
 }

@@ -77,7 +77,7 @@
       "ghostty" # Terminal emulator (cask kept for Sparkle auto-updates; nixpkgs now has ghostty-bin)
       "headlamp" # Kubernetes GUI IDE
       "ngrok" # Tunneling service
-      "raycast" # Spotlight replacement
+      "raycast" # Spotlight replacement (configured through its UI; settings sync via Raycast account)
       "the-unarchiver" # macOS archive utility
     ];
 

@@ -268,11 +268,8 @@
     max-cache-ttl 86400
   '';
 
-  # NOTE: previously this module installed AWS.CodeArtifact.NuGet.CredentialProvider
-  # as a dotnet global tool + NuGet plugin. The plugin installs cleanly and
-  # NuGet picks it up, but it silently fails to return creds (NU1301 with no
-  # plugin logs). We use `aws codeartifact login --tool dotnet` instead — see
-  # xsolis-dotnet-login above. Clean up the now-unused tool with:
-  #   dotnet tool uninstall -g AWS.CodeArtifact.NuGet.CredentialProvider
-  #   rm -rf ~/.nuget/plugins/netcore/AWS.CodeArtifact.NuGetCredentialProvider
+  # NOTE: don't switch to AWS.CodeArtifact.NuGet.CredentialProvider (dotnet
+  # global tool + NuGet plugin): it installs cleanly and NuGet picks it up,
+  # but it silently fails to return creds (NU1301 with no plugin logs).
+  # `aws codeartifact login --tool dotnet` (xsolis-dotnet-login above) works.
 }
