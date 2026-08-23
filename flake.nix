@@ -2,13 +2,7 @@
   description = "nix-darwin system flake with home-manager";
 
   inputs = {
-    # Pinned to the nixpkgs-unstable channel release just before 38affae, which
-    # ships a modular-services refactor (service.nix curried as `{ pkgs }:`,
-    # nixpkgs PR #518860) that home-manager can't import yet — eval fails with
-    # "unexpected argument 'lib'". Upstream reverted it on master (ec69cf3f)
-    # minutes after the channel advanced. Restore the plain channel URL once
-    # nixpkgs-unstable moves past the revert.
-    nixpkgs.url = "github:NixOS/nixpkgs/335f0738cb2fa9708f3f428e39d2eae975d1338d";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
@@ -32,6 +26,10 @@
     # binary cache at claude-code.cachix.org). No nixpkgs follows on
     # purpose — following would change hashes and miss their cache.
     claude-code-nix.url = "github:sadjow/claude-code-nix";
+    # Codex CLI packaged from OpenAI's releases by the same author (updated
+    # hourly, binary cache at codex-cli.cachix.org). Same rule as above: no
+    # nixpkgs follows, or hashes change and miss their cache.
+    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     # herdr — TUI agent multiplexer (runs coding agents side by side in the
     # terminal). Built from source; follows our nixpkgs/rust-overlay so the
     # toolchain and closure dedupe instead of pulling a second copy.
@@ -53,6 +51,7 @@
       treefmt-nix,
       determinate,
       claude-code-nix,
+      codex-cli-nix,
       herdr,
     }:
     let
