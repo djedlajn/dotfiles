@@ -42,7 +42,7 @@ for reclaiming old profile generations on demand.
 
 ## Stack
 
-**Terminal:** Ghostty, Zellij, Starship
+**Terminal:** Ghostty, Zellij, tmux, Starship
 
 **Shell:** Zsh + oh-my-zsh, fzf-tab, zsh-autopair, atuin, zoxide, direnv
 

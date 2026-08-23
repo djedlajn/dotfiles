@@ -15,6 +15,7 @@
     ../modules/fzf.nix
     ../modules/atuin.nix
     ../modules/zellij.nix
+    ../modules/tmux.nix
     ../modules/bat.nix
     ../modules/bottom.nix
     ../modules/eza.nix

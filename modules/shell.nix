@@ -180,6 +180,10 @@
 
       # Tools
       zj = "zellij";
+      tm = "tmux";
+      ta = "tmux attach -t";
+      tn = "tmux new -s";
+      tls = "tmux list-sessions";
     };
   };
 }

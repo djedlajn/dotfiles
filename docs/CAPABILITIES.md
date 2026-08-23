@@ -21,6 +21,17 @@
 | `Cmd+Shift+Enter / -` | Split right / down |
 | `Cmd+Opt+Arrow` | Navigate splits |
 
+### tmux (`tm`) — prefix `Ctrl+Space`
+
+| Key | Action |
+|-----|--------|
+| `"` / `%` | Split down / right (keeps cwd) |
+| `h j k l` | Move between panes |
+| `H J K L` | Resize pane (repeatable) |
+| `c` / `,` | New window / rename |
+| `[` then `v`, `y` | Copy mode: select, copy to clipboard |
+| `r` | Reload config |
+
 ### Yazi (`y`)
 
 `h/j/k/l` navigate, `y/x/p/d` copy/cut/paste/delete, `a` create, `r` rename, `/` find, `Ctrl+G` lazygit
@@ -46,6 +57,7 @@ nfc="nix flake check"   ngc="nh clean all + nix store optimise"
 
 # Tools
 y=yazi  zj=zellij  lg=lazygit  d="dirs -v"
+tm=tmux  ta="tmux attach -t"  tn="tmux new -s"  tls="tmux list-sessions"
 
 # Xsolis (work)
 xsl-login="aws sso login --sso-session xsolis"  xsl-whoami="aws sts get-caller-identity"
