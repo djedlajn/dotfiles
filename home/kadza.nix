@@ -29,6 +29,9 @@
     ../modules/git.nix
     ../modules/lazygit.nix
 
+    # Sync
+    ../modules/syncthing.nix
+
     # Work
     ../modules/xsolis.nix
 
