@@ -18,6 +18,7 @@
     ../modules/tmux.nix
     ../modules/bat.nix
     ../modules/bottom.nix
+    ../modules/fastfetch.nix
     ../modules/eza.nix
     ../modules/ripgrep.nix
     ../modules/zoxide.nix
@@ -178,7 +179,6 @@
     vivid # LS_COLORS generator
     silicon # Code screenshots
     asciinema # Terminal recording
-    fastfetch # System info
     cmatrix # Matrix screensaver
     rclone # Cloud sync
     mise # Version manager (polyglot)
