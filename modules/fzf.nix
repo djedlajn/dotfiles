@@ -19,18 +19,22 @@
     ];
 
     # Alt+C: cd into selected directory
-    changeDirWidgetCommand = "fd --type d --hidden --follow --exclude .git";
-    changeDirWidgetOptions = [
-      "--preview 'eza --tree --level=2 --icons --color=always {} | head -100'"
-    ];
+    changeDirWidget = {
+      command = "fd --type d --hidden --follow --exclude .git";
+      options = [
+        "--preview 'eza --tree --level=2 --icons --color=always {} | head -100'"
+      ];
+    };
 
     # Ctrl+T: paste selected file path
-    fileWidgetCommand = "fd --type f --hidden --follow --exclude .git";
-    fileWidgetOptions = [
-      "--preview 'bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {}'"
-    ];
+    fileWidget = {
+      command = "fd --type f --hidden --follow --exclude .git";
+      options = [
+        "--preview 'bat --style=numbers --color=always --line-range :500 {} 2>/dev/null || cat {}'"
+      ];
+    };
 
-    # Ctrl+R belongs to atuin (the atuin module); fzf no longer ships a
-    # history-widget option, so there is nothing to disable here.
+    # Ctrl+R belongs to atuin (the atuin module)
+    historyWidget.command = "";
   };
 }
