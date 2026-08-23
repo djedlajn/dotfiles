@@ -131,7 +131,18 @@
 
     # JavaScript/Node
     nodejs_24 # Node.js (includes corepack)
-    bun # Fast JS runtime
+    # Bun pinned to 1.3.14: nixpkgs (incl. master) still ships 1.3.13 and
+    # oh-my-pi needs >= 1.3.14. Bun has no LTS channel; 1.4.0 is a days-old
+    # full rewrite, so stay on the last 1.3 release. Swaps in the official
+    # prebuilt zip, so nothing compiles and only this package leaves the
+    # cache. Drop the override when nixpkgs bun reaches 1.3.14.
+    (bun.overrideAttrs (old: rec {
+      version = "1.3.14";
+      src = fetchurl {
+        url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-darwin-aarch64.zip";
+        hash = "sha256-2LliIYKK1vl6x6wKt+lYcjQa92MAHogD6CZ2UsJlJiA=";
+      };
+    }))
 
     # Python
     uv # Fast Python package manager
@@ -210,6 +221,16 @@
       noteEcho "Removed legacy claude installer (now managed by programs.claude-code)"
     fi
   '';
+
+  # Codex CLI - declarative, from sadjow/codex-cli-nix (same author and setup
+  # as claude-code above: updated hourly from OpenAI's releases, cached at
+  # codex-cli.cachix.org, native Rust binary). Update with `nfu` like
+  # everything else. Runtime state (~/.codex: config.toml, auth.json, ...)
+  # stays unmanaged on purpose - Codex rewrites those files itself.
+  programs.codex = {
+    enable = true;
+    package = inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  };
 
   # macOS saves screenshots here (system.defaults.screencapture.location in
   # modules/macos.nix) but silently drops them if the folder doesn't exist.

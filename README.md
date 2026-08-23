@@ -50,7 +50,7 @@ for reclaiming old profile generations on demand.
 
 **Git:** lazygit, delta, jujutsu, difftastic, gh
 
-**AI:** Claude Code (declarative via claude-code-nix, hourly updates + cachix), herdr, opencode (brew)
+**AI:** Claude Code + Codex (declarative via claude-code-nix / codex-cli-nix, hourly updates + cachix), herdr, opencode + omp (brew)
 
 **Languages:** Rust (overlay), Go, Node 24, Bun, Python 3 + uv, Elixir 1.18, Java 17
 

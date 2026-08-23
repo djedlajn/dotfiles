@@ -73,7 +73,7 @@ assume="source assume"
 | Core CLI | fd, jq, yq, sd, choose, curl, wget, aria2 |
 | Monitoring | bottom, procs, dust, duf, bandwhich, trippy |
 | Dev | jujutsu, difftastic, pre-commit, gh, tokei, hyperfine, television |
-| AI | claude-code, herdr, opencode (brew) |
+| AI | claude-code, herdr, opencode + omp (brew) |
 | HTTP | xh, doggo, dnsmasq, cloudflared |
 | Cloud/K8s | awscli2, aws-nuke, packer, kubectl, helm, k9s, stern, kubectx |
 | Formatters | stylua, shfmt, shellcheck, nixfmt |

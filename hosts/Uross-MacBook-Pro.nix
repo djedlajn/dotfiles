@@ -17,11 +17,13 @@
       "https://nix-community.cachix.org"
       "https://cache.garnix.io"
       "https://claude-code.cachix.org"
+      "https://codex-cli.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
+      "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
     ];
   };
 
@@ -61,6 +63,7 @@
     # Custom taps
     taps = [
       "anomalyco/tap" # opencode
+      "can1357/tap" # omp (oh-my-pi)
     ];
 
     # GUI apps (casks) - Only macOS-specific apps not available in nixpkgs
@@ -80,7 +83,14 @@
 
     # CLI tools not in nixpkgs (if any)
     brews = [
-      "anomalyco/tap/opencode" # AI coding agent (nix pkg outdated)
+      # Official tap + onActivation.upgrade keeps it ~daily fresh; nixpkgs
+      # carries opencode too but trails releases by a few days. Move it to
+      # home.packages if that lag stops mattering (drops this tap + brews).
+      "anomalyco/tap/opencode" # AI coding agent
+      # Prebuilt binary from the official tap. The upstream nix flake exists
+      # but builds ~1500 uncached derivations from source; brew + upgrade
+      # keeps pace with its near-daily releases instead. Not in nixpkgs.
+      "can1357/tap/omp" # oh-my-pi AI coding agent
     ];
 
     # Mac App Store apps (requires `mas` CLI)
