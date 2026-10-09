@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
@@ -28,9 +29,14 @@
     # Git
     ../modules/git.nix
     ../modules/lazygit.nix
+    ../modules/gh.nix
+    ../modules/jujutsu.nix
 
     # Sync
     ../modules/syncthing.nix
+
+    # Scheduled jobs
+    ../modules/launchd.nix
 
     # Work
     ../modules/xsolis.nix
@@ -65,7 +71,6 @@
     # ─────────────────────────────────────────────────────────────
     # System monitoring
     # ─────────────────────────────────────────────────────────────
-    bottom # System monitor (btm)
     procs # Modern ps
     dust # Modern du
     duf # Modern df
@@ -75,8 +80,6 @@
     # Development tools
     # ─────────────────────────────────────────────────────────────
     pre-commit # Git hooks
-    gh # GitHub CLI
-    jujutsu # Modern VCS (jj)
     television # Fuzzy finder TUI (tv)
     difftastic # Structural diff
     tokei # Code statistics
@@ -84,14 +87,17 @@
     dive # Docker image explorer
     mkcert # Local TLS certs
     graphviz # Graph visualization
-    inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default # TUI agent multiplexer
+    herdr # TUI agent multiplexer (nixpkgs build, cached; the upstream flake built from source on every bump)
+    # nixpkgs trails the official tap by about one patch release; the wrapper
+    # disables opencode's self-updater, so it moves with `nup` like the rest.
+    opencode # AI coding agent
 
     # ─────────────────────────────────────────────────────────────
     # Nix tools
     # ─────────────────────────────────────────────────────────────
     nvd # Nix version diff
     nix-tree # Visualize nix dependencies
-    nh # Nix helper (pretty rebuilds with diffs)
+    devenv # Per-project dev environments and services (devenv.sh)
 
     # ─────────────────────────────────────────────────────────────
     # Formatters & Linters
@@ -128,18 +134,10 @@
 
     # JavaScript/Node
     nodejs_24 # Node.js (includes corepack)
-    # Bun pinned to 1.3.14: nixpkgs (incl. master) still ships 1.3.13 and
-    # oh-my-pi needs >= 1.3.14. Bun has no LTS channel; 1.4.0 is a days-old
-    # full rewrite, so stay on the last 1.3 release. Swaps in the official
-    # prebuilt zip, so nothing compiles and only this package leaves the
-    # cache. Drop the override when nixpkgs bun reaches 1.3.14.
-    (bun.overrideAttrs (old: rec {
-      version = "1.3.14";
-      src = fetchurl {
-        url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-darwin-aarch64.zip";
-        hash = "sha256-2LliIYKK1vl6x6wKt+lYcjQa92MAHogD6CZ2UsJlJiA=";
-      };
-    }))
+    pnpm
+    yarn # Classic 1.x
+    wrangler # Cloudflare Workers CLI
+    bun # oh-my-pi needs >= 1.3.14
 
     # Python
     uv # Fast Python package manager
@@ -151,7 +149,12 @@
     elixir-ls
 
     # Go (already in system packages)
-    # Rust (already in system packages via rust-overlay)
+    # Rust toolchain is in system packages via rust-overlay; these replace
+    # the cargo-installed copies from the old rustup setup.
+    cargo-audit
+    cargo-deny
+    cargo-vet
+    cargo-tauri
 
     cocoapods # iOS dependency manager
     tree-sitter # Parser generator
@@ -214,6 +217,19 @@
   programs.codex = {
     enable = true;
     package = inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  };
+
+  # nh's scheduled clean only prunes old home-manager generations (--no-gc).
+  # Determinate Nixd already collects store garbage, and its docs advise
+  # against running a second collector on a timer.
+  programs.nh = {
+    enable = true;
+    darwinFlake = "${config.home.homeDirectory}/.config/nix";
+    clean = {
+      enable = true;
+      dates = "weekly";
+      extraArgs = "--keep 3 --keep-since 7d --no-gc";
+    };
   };
 
   # macOS saves screenshots here (system.defaults.screencapture.location in

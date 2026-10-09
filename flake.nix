@@ -21,7 +21,13 @@
     };
     # Determinate Nix's nix-darwin module: declarative Nix settings
     # (nix.custom.conf) while Determinate manages the daemon.
-    determinate.url = "github:DeterminateSystems/determinate";
+    determinate = {
+      url = "github:DeterminateSystems/determinate";
+      # The module just configures the daemon; determinate-nixd ships as a
+      # prebuilt binary, so following our nixpkgs drops a duplicate ~40MB
+      # nixpkgs fetch from the lock without losing their cache.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # Claude Code packaged from Anthropic's releases (updated hourly,
     # binary cache at claude-code.cachix.org). No nixpkgs follows on
     # purpose — following would change hashes and miss their cache.
@@ -30,14 +36,6 @@
     # hourly, binary cache at codex-cli.cachix.org). Same rule as above: no
     # nixpkgs follows, or hashes change and miss their cache.
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
-    # herdr — TUI agent multiplexer (runs coding agents side by side in the
-    # terminal). Built from source; follows our nixpkgs/rust-overlay so the
-    # toolchain and closure dedupe instead of pulling a second copy.
-    herdr = {
-      url = "github:ogulcancelik/herdr";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.rust-overlay.follows = "rust-overlay";
-    };
   };
 
   outputs =
@@ -52,7 +50,6 @@
       determinate,
       claude-code-nix,
       codex-cli-nix,
-      herdr,
     }:
     let
       username = "kadza";
@@ -82,6 +79,7 @@
               pkg:
               builtins.elem (nixpkgs.lib.getName pkg) [
                 "packer" # HashiCorp BSL license
+                "liquibase" # FSL-1.1-ALv2 license (converts to Apache 2.0 after 2 years)
               ];
           }
           {

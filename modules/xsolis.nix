@@ -188,7 +188,7 @@
 
   # ── direnv activation under ~/xsolis/ ──
   # Loaded by direnv on `cd ~/xsolis/<anything>`. Sets AWS profile, region,
-  # and activates mise (which reads .mise.toml below for Node/dotnet versions).
+  # and activates mise (which reads .mise.toml below for the Node version).
   home.file."xsolis/.envrc".text = ''
     # shellcheck shell=bash
     export AWS_PROFILE=xsolis-dev
@@ -251,12 +251,12 @@
   home.file.".claude-xsolis/settings.json".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/settings.json";
 
-  # ── mise pinned versions for ~/xsolis/ (Node 20, .NET 8) ──
+  # ── mise pinned versions for ~/xsolis/ (Node 20) ──
+  # .NET comes from dotnet-sdk_8 above; a mise pin would install a second SDK.
   # Subprojects can override by committing their own .mise.toml or global.json.
   home.file."xsolis/.mise.toml".text = ''
     [tools]
     node = "20"
-    dotnet = "8"
   '';
 
   # ── GPG agent config (xsolis key) ──

@@ -1,8 +1,12 @@
 keys:
   - &kadza age18smxw8ml839ln20p6h2h6l5p3cr4sc5x6f23f9sk54umgu7vkszql2tarr
+  # Backup recipient: ~/.ssh/id_ed25519 (hi@uros.dev), also held in Bitwarden.
+  # Decrypt with SOPS_AGE_SSH_PRIVATE_KEY_FILE=<exported key> if keys.txt is lost.
+  - &kadza_ssh ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHmdchtcmbOwtdU4ZBlXDvl8fXNhpRqerZztq/YjOUuL
 
 creation_rules:
   - path_regex: secrets/.*\.yaml$
     key_groups:
       - age:
           - *kadza
+          - *kadza_ssh

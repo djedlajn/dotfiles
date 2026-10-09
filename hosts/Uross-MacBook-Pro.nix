@@ -15,13 +15,11 @@
     # Extra binary caches (faster than Hydra for aarch64-darwin)
     extra-substituters = [
       "https://nix-community.cachix.org"
-      "https://cache.garnix.io"
       "https://claude-code.cachix.org"
       "https://codex-cli.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
       "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
     ];
@@ -35,7 +33,6 @@
   environment.systemPackages = [
     pkgs.vim
     pkgs.home-manager
-    pkgs.zellij
     pkgs.slides
     pkgs.pulumi
     (pkgs.rust-bin.stable.latest.default.override {
@@ -51,18 +48,19 @@
   homebrew = {
     enable = true;
 
-    # Activation behavior
+    # Rebuilds only converge to the declared set; they never fetch the brew
+    # index or upgrade anything, so `nrs` stays fast and repeatable. Upgrade
+    # brew items explicitly with `bwu`.
     onActivation = {
-      autoUpdate = true; # Update brew index on rebuild
       # Uninstall + purge anything not declared below. Was temporarily "none"
       # for nix-darwin#1774; the pinned nix-darwin now passes --force-cleanup.
       cleanup = "zap";
-      upgrade = true; # Upgrade packages on rebuild
     };
+    # Also exports HOMEBREW_NO_AUTO_UPDATE=1 system-wide.
+    global.autoUpdate = false;
 
     # Custom taps
     taps = [
-      "anomalyco/tap" # opencode
       "can1357/tap" # omp (oh-my-pi)
     ];
 
@@ -70,34 +68,37 @@
     casks = [
       "bitwarden" # Password manager with SSH agent
       # claude-code managed declaratively via programs.claude-code (home-manager)
-      "command-x" # Cut and paste files in Finder
-      "dockutil" # macOS dock management
-      "font-jetbrains-mono-nerd-font" # JetBrainsMono with Nerd Font icons
-      "font-liberation" # Liberation fonts
-      "ghostty" # Terminal emulator (cask kept for Sparkle auto-updates; nixpkgs now has ghostty-bin)
+      # Nightly builds that update themselves; config lives in programs.ghostty
+      # (modules/ghostty.nix, package = null).
+      "ghostty@tip" # Terminal
       "headlamp" # Kubernetes GUI IDE
       "ngrok" # Tunneling service
       "raycast" # Spotlight replacement (configured through its UI; settings sync via Raycast account)
       "the-unarchiver" # macOS archive utility
     ];
 
-    # CLI tools not in nixpkgs (if any)
     brews = [
-      # Official tap + onActivation.upgrade keeps it ~daily fresh; nixpkgs
-      # carries opencode too but trails releases by a few days. Move it to
-      # home.packages if that lag stops mattering (drops this tap + brews).
-      "anomalyco/tap/opencode" # AI coding agent
       # Prebuilt binary from the official tap. The upstream nix flake exists
-      # but builds ~1500 uncached derivations from source; brew + upgrade
+      # but builds ~1500 uncached derivations from source; brew + `bwu`
       # keeps pace with its near-daily releases instead. Not in nixpkgs.
       "can1357/tap/omp" # oh-my-pi AI coding agent
     ];
 
-    # Mac App Store apps (requires `mas` CLI)
+    # Mac App Store apps (nix-darwin supplies `mas` during activation). Already
+    # installed; declared so a fresh machine restores them. Upgrades go
+    # through the App Store, not activation.
     masApps = {
-      # "App Name" = app-id;
+      Xcode = 497799835;
+      TestFlight = 899247664;
+      "Okta Verify" = 490179405;
     };
   };
+
+  # Fonts land in /Library/Fonts/Nix Fonts; replaces the two font casks.
+  fonts.packages = [
+    pkgs.nerd-fonts.jetbrains-mono # Ghostty's JetBrainsMono Nerd Font Mono
+    pkgs.liberation_ttf
+  ];
 
   # User definition. knownUsers makes nix-darwin manage this account record
   # via dscl — without it the `shell` attribute is silently ignored on

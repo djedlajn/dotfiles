@@ -1,0 +1,28 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flake-check:
+    # Apple Silicon runner: the flake only defines aarch64-darwin outputs.
+    runs-on: macos-15
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/determinate-nix-action@v3
+        with:
+          # Same caches as determinateNix.customSettings in hosts/Uross-MacBook-Pro.nix.
+          extra-conf: |
+            extra-substituters = https://nix-community.cachix.org https://claude-code.cachix.org https://codex-cli.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk= codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing=
+      # Builds the darwin system closure and runs the treefmt check (flake.nix `checks`).
+      # sops secrets decrypt at activation, so no age key is needed here.
+      - run: nix flake check -L
