@@ -40,8 +40,8 @@ Subsequent rebuilds use `nrs` (nh handles privilege escalation).
 ## Day-to-day
 
 ```bash
-nup       # Update flake inputs, then rebuild & switch
-nfu       # Update all flake inputs
+nup       # Update flake inputs and boat, then rebuild & switch
+nfu       # Update all flake inputs and bump boat
 nrs       # Rebuild & switch (nh, with diffs)
 nrb       # Build without switching
 nfc       # nix flake check — builds the system + verifies formatting
@@ -67,7 +67,8 @@ collectable.
 ### CI
 
 `check.yml` runs `nix flake check` on macOS for every push and PR.
-`update-flake-lock.yml` opens a flake.lock PR every Monday. It needs the
+`update-flake-lock.yml` opens a flake.lock PR every Monday, with a boat
+bump commit when boat.dev serves a newer CLI. It needs the
 `GH_TOKEN_FOR_UPDATES` repo secret (fine-grained PAT, Contents + Pull
 requests read/write) so CI runs on that PR.
 
@@ -121,7 +122,7 @@ SOPS_AGE_SSH_PRIVATE_KEY_FILE=~/.ssh/id_ed25519 sops updatekeys -y secrets/secre
 
 **Git:** lazygit, delta, jujutsu, difftastic, gh
 
-**AI:** Claude Code + Codex (declarative via claude-code-nix / codex-cli-nix, hourly updates + cachix), herdr, opencode, omp (brew)
+**AI:** Claude Code + Codex (declarative via claude-code-nix / codex-cli-nix, hourly updates + cachix), herdr, opencode, boat (pinned release, bump with `modules/boat/update.sh`), omp (brew)
 
 **Languages:** Rust (overlay), Go, Node 24 + pnpm/yarn, Bun, Python 3 + uv, Elixir 1.18, Java 17
 

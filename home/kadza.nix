@@ -38,6 +38,9 @@
     # Scheduled jobs
     ../modules/launchd.nix
 
+    # AI sandboxes
+    ../modules/boat
+
     # Work
     ../modules/xsolis.nix
 

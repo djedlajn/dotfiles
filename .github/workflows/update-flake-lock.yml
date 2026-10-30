@@ -19,6 +19,20 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: DeterminateSystems/determinate-nix-action@v3
+      # boat is pinned in modules/boat/release.json, not a flake input. The
+      # create-pull-request step inside update-flake-lock includes local
+      # commits ahead of base, so the bump lands in the same PR. A boat.dev
+      # outage must not block the lock update.
+      - name: Bump boat CLI
+        continue-on-error: true
+        run: |
+          modules/boat/update.sh
+          if ! git diff --quiet -- modules/boat/release.json; then
+            git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m "build(boat): bump to $(jq -r .version modules/boat/release.json)" \
+              -- modules/boat/release.json
+          fi
       - uses: DeterminateSystems/update-flake-lock@v29
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}

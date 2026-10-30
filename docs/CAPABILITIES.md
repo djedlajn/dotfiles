@@ -52,7 +52,7 @@ cat=bat  grep=rg  find=fd  du=dust  df=duf  ps=procs  top=btm  dig=doggo
 g gs ga gaa gc gcm gca gp gpf gl gd gds gco gcb gb glog
 
 # Nix
-nrs="nh darwin switch"  nrb="nh darwin build"  nfu="nix flake update"
+nrs="nh darwin switch"  nrb="nh darwin build"  nfu="nix flake update + boat bump"
 nup="nfu + nrs"         nfc="nix flake check"   ngc="nh clean all --no-gc + nix store optimise"
 bwu="brew update && brew upgrade"  (rebuilds never upgrade brew)
 
@@ -74,7 +74,7 @@ assume="source assume"
 | Core CLI | fd, jq, yq, sd, choose, curl, wget, aria2 |
 | Monitoring | bottom, procs, dust, duf, bandwhich, trippy |
 | Dev | jujutsu, difftastic, pre-commit, gh, tokei, hyperfine, television |
-| AI | claude-code, codex, herdr, opencode, omp (brew) |
+| AI | claude-code, codex, herdr, opencode, boat, omp (brew) |
 | HTTP | xh, doggo, dnsmasq, cloudflared |
 | Cloud/K8s | awscli2, aws-nuke, packer, kubectl, helm, k9s, stern, kubectx, wrangler |
 | Formatters | stylua, shfmt, shellcheck, nixfmt |

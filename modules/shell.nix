@@ -187,8 +187,9 @@
       # Nix/Darwin (nh gives pretty output with diffs)
       nrs = "nh darwin switch ~/.config/nix";
       nrb = "nh darwin build ~/.config/nix";
-      nfu = "nix flake update --flake ~/.config/nix";
-      nup = "nix flake update --flake ~/.config/nix && nh darwin switch ~/.config/nix";
+      # boat is a pinned release, not a flake input; update.sh bumps it.
+      nfu = "nix flake update --flake ~/.config/nix && ~/.config/nix/modules/boat/update.sh";
+      nup = "nix flake update --flake ~/.config/nix && ~/.config/nix/modules/boat/update.sh && nh darwin switch ~/.config/nix";
       nfc = "nix flake check ~/.config/nix";
       # Prune old generations (keep 3 / last 7d), then hardlink-dedup the
       # store. No GC here: Determinate Nixd collects garbage on its own.
