@@ -1,4 +1,26 @@
-{ pkgs, lib, ... }: {
+{
+  config,
+  osConfig,
+  pkgs,
+  lib,
+  ...
+}:
+{
+  # Homebrew's shellenv and the PATH below put these directories ahead of the
+  # Nix profiles, so a vendor installer's copy there silently shadows a
+  # Nix-managed command (a stray copy once kept claude-code 24 releases
+  # behind). Warn on every switch instead of reordering PATH.
+  home.activation.warnShadowedCommands = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for f in /opt/homebrew/bin/* /opt/homebrew/sbin/* "$HOME"/.local/bin/* \
+      "$HOME"/.dotnet/tools/* "$HOME"/.config/jetbrains/*; do
+      [[ -e $f ]] || continue
+      name=''${f##*/}
+      if [[ -e ${config.home.path}/bin/$name || -e ${osConfig.system.path}/bin/$name ]]; then
+        warnEcho "$f shadows the Nix-managed $name on PATH"
+      fi
+    done
+  '';
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
